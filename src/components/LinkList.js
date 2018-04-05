@@ -8,6 +8,7 @@ class LinkList extends Component {
 
   componentDidMount() {
     this._subscribeToNewLinks();
+    this._subscribeToNewVotes();
   }
 
   render() {
@@ -45,9 +46,6 @@ class LinkList extends Component {
   }
 
   _subscribeToNewLinks = () => {
-
-    console.log("_subscribeToNewLinks");
-
     this.props.feedQuery.subscribeToMore({
       document: gql`
         subscription {
@@ -89,7 +87,44 @@ class LinkList extends Component {
       }
     });
   }
+
+  _subscribeToNewVotes = () => {
+    console.log("_subscribeToNewVotes");
+    this.props.feedQuery.subscribeToMore({
+      document: gql`
+        subscription {
+          newVote {
+            node {
+              id
+              link {
+                id
+                url
+                description
+                createdAt
+                postedBy {
+                  id
+                  name
+                }
+              }
+              user {
+                id
+              }
+            }
+          }
+        }
+      `,
+      updateQuery: (previous, { subscriptionData }) => {
+        console.log(previous, subscriptionData);
+        // TODO: fix this so it actually live updates
+        // previous = {feed: {links: ...}}
+        // subscriptionData = {data: {newVote: {node: {id, link, user}}}}  -> a vote
+      }
+    });
+  }
 }
+
+
+
 
 export const FEED_QUERY = gql`
   query FeedQuery {
