@@ -5,6 +5,11 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 class LinkList extends Component {
+
+  componentDidMount() {
+    this._subscribeToNewLinks();
+  }
+
   render() {
     if (this.props.feedQuery && this.props.feedQuery.loading) {
       return <div>Loading</div>;
@@ -39,6 +44,51 @@ class LinkList extends Component {
     store.writeQuery({ query: FEED_QUERY, data });
   }
 
+  _subscribeToNewLinks = () => {
+
+    console.log("_subscribeToNewLinks");
+
+    this.props.feedQuery.subscribeToMore({
+      document: gql`
+        subscription {
+          newLink {
+            node {
+              id
+              url
+              description
+              createdAt
+              postedBy {
+                id
+                name
+              }
+              votes {
+                id
+                user {
+                  id
+                }
+              }
+            }
+          }
+        }
+      `,
+
+      updateQuery: (previous, { subscriptionData }) => {
+        const newAllLinks = [
+          ...previous.feed.links,
+          subscriptionData.data.newLink.node          
+        ];
+
+        const result = {       
+          ...previous,
+          feed: {
+            links: newAllLinks,
+            __typename: previous.feed.__typename,   
+          },
+        };
+        return result;
+      }
+    });
+  }
 }
 
 export const FEED_QUERY = gql`
@@ -62,7 +112,7 @@ export const FEED_QUERY = gql`
       }
     }
   }
-`
+`;
 
 // the data will be available through this.props.feedQuery instead of this.props.data
 export default graphql(FEED_QUERY, { name: 'feedQuery'}) (LinkList)
