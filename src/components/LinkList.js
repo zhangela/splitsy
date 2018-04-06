@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import envvar from 'envvar';
 
 import Link from './Link';
 import PlaidLink from './PlaidLink';
@@ -13,7 +12,7 @@ class LinkList extends Component {
     this._subscribeToNewLinks();
     this._subscribeToNewVotes();
 
-    
+
   }
 
   render() {
@@ -35,20 +34,35 @@ class LinkList extends Component {
           product={["transactions"]}
           publicKey={PLAID_PUBLIC_KEY}
           onExit={() => console.log("Exited!")}
-          onSuccess= { (publicToken) => console.log("Success!", publicToken)}>
+          onSuccess= {this._onPlaidLinkSuccess}>
           Open Link and connect your bank!
         </PlaidLink>
 
         {linksToRender.map((link, index) => (
-          <Link 
-            key={link.id} 
-            index={index} 
-            link={link} 
+          <Link
+            key={link.id}
+            index={index}
+            link={link}
             updateStoreAfterVote={this._updateCacheAfterVote}
           />
         ))}
       </div>
     )
+  }
+
+  _onPlaidLinkSuccess = (public_token) => {
+    fetch('http://localhost:4000', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `mutation ($publicToken: String!) {
+          storeAccessToken(publicToken: $publicToken)
+        }`,
+        variables: { publicToken: public_token }
+      })
+    })
+      .then(res => res.json())
+      .then(res => console.log(res.data));
   }
 
   _updateCacheAfterVote = (store, createVote, linkId) => {
@@ -88,14 +102,14 @@ class LinkList extends Component {
       updateQuery: (previous, { subscriptionData }) => {
         const newAllLinks = [
           ...previous.feed.links,
-          subscriptionData.data.newLink.node          
+          subscriptionData.data.newLink.node
         ];
 
-        const result = {       
+        const result = {
           ...previous,
           feed: {
             links: newAllLinks,
-            __typename: previous.feed.__typename,   
+            __typename: previous.feed.__typename,
           },
         };
         return result;
@@ -104,7 +118,6 @@ class LinkList extends Component {
   }
 
   _subscribeToNewVotes = () => {
-    console.log("_subscribeToNewVotes");
     this.props.feedQuery.subscribeToMore({
       document: gql`
         subscription {

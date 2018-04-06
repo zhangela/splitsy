@@ -7,14 +7,14 @@ function post(parent, { url, description }, ctx, info) {
   return ctx.db.mutation.createLink(
     {
       data: {
-        url, 
-        description, 
+        url,
+        description,
         postedBy: {
           connect: {
             id: userId
           }
-        } 
-      } 
+        }
+      }
     }, info)
 }
 
@@ -71,9 +71,38 @@ async function vote(parent, args, ctx, info) {
   )
 }
 
+
+async function storeAccessToken(
+  parent,
+  { publicToken },
+  ctx,
+  info
+) {
+
+  const exchangeTokenRes = await ctx.plaidClient.exchangePublicToken(
+    publicToken
+  );
+
+  // The access_token can be used to make API calls to
+  // retrieve product data - store access_token and item_id
+  // in a persistent datastore
+  const accessToken = exchangeTokenRes.access_token;
+  const itemId = exchangeTokenRes.item_id;
+
+  ctx.db.mutation.createItem({
+    data: {
+      itemId,
+      accessToken
+    }
+  });
+
+  return true;
+}
+
 module.exports = {
   post,
   signup,
   login,
   vote,
+  storeAccessToken,
 }
