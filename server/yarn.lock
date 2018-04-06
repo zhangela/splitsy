@@ -1149,6 +1149,10 @@ end-of-stream@^1.0.0:
   dependencies:
     once "^1.4.0"
 
+envvar@^2.0.0:
+  version "2.0.0"
+  resolved "https://npm.plaid.com/e/envvar/_attachments/envvar-2.0.0.tgz#71ec0cd0f985539a3046d4f4da56c67d7c2bf03f"
+
 errno@^0.1.1:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/errno/-/errno-0.1.6.tgz#c386ce8a6283f14fc09563b71560908c9bf53026"
