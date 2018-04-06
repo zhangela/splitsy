@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
-import Link from './Link';
-
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import envvar from 'envvar';
+
+import Link from './Link';
+import PlaidLink from './PlaidLink';
+import { PLAID_PUBLIC_KEY } from '../constants';
 
 class LinkList extends Component {
 
   componentDidMount() {
     this._subscribeToNewLinks();
     this._subscribeToNewVotes();
+
+    
   }
 
   render() {
@@ -24,6 +29,16 @@ class LinkList extends Component {
 
     return (
       <div>
+        <PlaidLink
+          clientName="Splitsy"
+          env="sandbox"
+          product={["transactions"]}
+          publicKey={PLAID_PUBLIC_KEY}
+          onExit={() => console.log("Exited!")}
+          onSuccess= { (publicToken) => console.log("Success!", publicToken)}>
+          Open Link and connect your bank!
+        </PlaidLink>
+
         {linksToRender.map((link, index) => (
           <Link 
             key={link.id} 
