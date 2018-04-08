@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import Link from './Link';
 import PlaidLink from './PlaidLink';
-import { PLAID_PUBLIC_KEY } from '../constants';
+import { PLAID_PUBLIC_KEY, USER_ID } from '../constants';
 
 class LinkList extends Component {
 
@@ -51,14 +51,16 @@ class LinkList extends Component {
   }
 
   _onPlaidLinkSuccess = (public_token) => {
+    const userId = localStorage.getItem(USER_ID);
+
     fetch('http://localhost:4000', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        query: `mutation ($publicToken: String!) {
-          storeAccessToken(publicToken: $publicToken)
+        query: `mutation ($publicToken: String!, $userId: String!) {
+          storeAccessToken(publicToken: $publicToken, userId: $userId)
         }`,
-        variables: { publicToken: public_token }
+        variables: { publicToken: public_token, userId: userId }
       })
     })
       .then(res => res.json())

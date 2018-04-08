@@ -89,13 +89,16 @@ async function storeAccessToken(
   const accessToken = exchangeTokenRes.access_token;
   const itemId = exchangeTokenRes.item_id;
 
-  ctx.db.mutation.createItem({
-    data: {
-      user: { connect: { id: userId } },
-      itemId,
-      accessToken
+  // TODO: if this line fails, we should return false instead of true.
+  ctx.db.mutation.createItem(
+    {
+      data: {
+        itemId: itemId,
+        accessToken: accessToken,
+        user: { connect: { id: userId } },
+      }
     }
-  });
+  );
 
   return true;
 }
