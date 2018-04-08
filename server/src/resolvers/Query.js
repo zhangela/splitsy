@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 async function feed(parent, args, ctx, info) {
   const { filter, first, skip } = args // destructure input arguments
   const where = filter
@@ -15,6 +17,33 @@ async function feed(parent, args, ctx, info) {
   }
 }
 
+
+async function transactions(parent, { userId }, ctx, info) {
+  // Pull transactions for the Item for the last 30 days
+  const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+  const endDate = moment().format('YYYY-MM-DD');
+
+  const userItems = await ctx.db.query.items({
+    user: { connect: { id: userId } }
+  });
+
+  // TODO: for now, assume each user only has 1 item.
+  const accessToken = userItems[0].accessToken;
+
+  const transactions = await ctx.plaidClient.getTransactions(
+    accessToken,
+    startDate,
+    endDate,
+    {
+      count: 250,
+      offset: 0,
+    }
+  );
+  return transactions.transactions;
+}
+
+
 module.exports = {
   feed,
+  transactions,
 }
