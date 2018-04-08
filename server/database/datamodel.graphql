@@ -24,6 +24,8 @@ type User {
 
 type Item {
   id: ID! @unique  # this id field is needed for prisma to generate the schema
+  user: User!
   itemId: String!
   accessToken: String!
 }
+
