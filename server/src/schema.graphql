@@ -5,7 +5,7 @@ type Query {
 }
 
 type Mutation {
-  storeAccessToken(publicToken: String!): Boolean!
+  storeAccessToken(publicToken: String!, userId: String!): Boolean!
   post(url: String!, description: String!): Link!
   signup(email: String!, password: String!, name: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload

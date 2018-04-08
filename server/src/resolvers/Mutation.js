@@ -74,7 +74,7 @@ async function vote(parent, args, ctx, info) {
 
 async function storeAccessToken(
   parent,
-  { publicToken },
+  { publicToken, userId },
   ctx,
   info
 ) {
@@ -91,6 +91,7 @@ async function storeAccessToken(
 
   ctx.db.mutation.createItem({
     data: {
+      user: { connect: { id: userId } },
       itemId,
       accessToken
     }
