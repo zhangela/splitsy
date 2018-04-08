@@ -31,7 +31,7 @@ const server = new GraphQLServer({
     plaidClient,
     db: new Prisma({
       typeDefs: 'src/generated/prisma.graphql',
-      endpoint: 'https://us1.prisma.sh/public-calicohound-798/hackernews-graphql-js/dev',
+      endpoint: 'https://us1.prisma.sh/public-smallspur-416/hackernews-graphql-js/dev',
       secret: 'mysecret123',
     }),
   }),
