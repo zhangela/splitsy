@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { AUTH_TOKEN } from '../constants';
+import { AUTH_TOKEN, USER_ID } from '../constants';
 
 class Login extends Component {
   state = {
@@ -43,13 +43,13 @@ class Login extends Component {
         </div>
 
         <div className="flex mt3">
-          <div 
-            className="pointer mr2 button" 
+          <div
+            className="pointer mr2 button"
             onClick={() => this._confirm()}
           >
             {this.state.login ? 'Login' : 'Create Account'}
           </div>
-          <div 
+          <div
             className="pointer button"
             onClick={() => this.setState({ login: !this.state.login })}
           >
@@ -59,7 +59,7 @@ class Login extends Component {
           </div>
         </div>
       </div>
-    ) 
+    )
   }
 
   _confirm = async() => {
@@ -72,8 +72,8 @@ class Login extends Component {
           password,
         },
       });
-      const { token } = result.data.login;
-      this._saveUserData(token);
+      const { token: token, user: { id } } = result.data.login;
+      this._saveUserData(token, id);
 
     } else {
       const result = await this.props.signupMutation({
@@ -83,15 +83,17 @@ class Login extends Component {
           password,
         },
       });
-      const { token } = result.data.signup;
-      this._saveUserData(token);
+      const { token: token, user: { id } } = result.data.signup;
+      this._saveUserData(token, id);
     }
 
     this.props.history.push('/');
   }
 
-  _saveUserData = token => {
+  _saveUserData = (token, userId) => {
     localStorage.setItem(AUTH_TOKEN, token);
+    localStorage.setItem(USER_ID, userId);
+
   }
 }
 
@@ -100,6 +102,9 @@ const SIGNUP_MUTATION = gql`
   mutation SignupMutation($email: String!, $password: String!, $name: String!) {
     signup(email: $email, password: $password, name: $name) {
       token
+      user {
+        id
+      }
     }
   }
 `;
@@ -108,6 +113,9 @@ const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
+      user {
+        id
+      }
     }
   }
 `;
