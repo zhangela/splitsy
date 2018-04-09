@@ -11,8 +11,6 @@ class LinkList extends Component {
   componentDidMount() {
     this._subscribeToNewLinks();
     this._subscribeToNewVotes();
-
-
   }
 
   render() {

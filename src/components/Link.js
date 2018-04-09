@@ -24,7 +24,7 @@ class Link extends Component {
           </div>
           <div className="f6 lh-copy gray">
             {this.props.link.votes.length} votes | by{' '}
-            
+
             {/* TODO: Figure out why this is always "Unknown" */}
             {this.props.link.postedBy
               ? this.props.link.postedBy.name
@@ -53,10 +53,10 @@ class Link extends Component {
 const VOTE_MUTATION = gql`
   mutation VoteMutation($linkId: ID!) {
     vote(linkId: $linkId) {
-      id 
+      id
       link {
         votes {
-          id 
+          id
           user {
             id
           }

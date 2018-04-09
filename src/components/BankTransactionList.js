@@ -3,6 +3,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import { USER_ID } from '../constants';
+import Transaction from './Transaction';
 
 
 class BankTransactionList extends Component {
@@ -21,38 +22,12 @@ class BankTransactionList extends Component {
     return (
       <div className="mw7 center">
         {transactions.map((t, index) => (
-          <article className="dt w-100 bb b--black-05 pb2 mt2">
-            <div className="dtc w2 w3-ns v-mid">
-              <img
-                src="http://mrmrs.github.io/photos/p/2.jpg"
-                className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns" />
-            </div>
-
-            <div className="dtc v-mid pl3">
-              <h1 className="f6 f5-ns fw6 lh-title black mv0">
-                {t.name}
-              </h1>
-              <h2 className="f6 fw4 mt0 mb0 black-60">
-                ${t.amount}
-              </h2>
-            </div>
-
-            <div className="dtc v-mid">
-              <form className="w-100 tr">
-                <button
-                  className="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60"
-                  type="submit"
-                >
-                + Add to trip
-                </button>
-
-              </form>
-            </div>
-          </article>
+          <Transaction transaction={t} key={t.transaction_id}/>
         ))}
       </div>
     )
   }
+
 }
 
 
@@ -60,8 +35,13 @@ export const TRANSACTIONS_QUERY = gql`
   query TransactionsQuery($userId: String!) {
     transactions(userId: $userId) {
       transaction_id
+      date
       name
+      category
       amount
+      location {
+        city
+      }
     }
   }
 `;
@@ -71,7 +51,6 @@ export default graphql(
   TRANSACTIONS_QUERY, {
     name: 'transactionsQuery',
     options: ownProps => {
-      console.log("userId", localStorage.getItem(USER_ID));
       return {
         variables: {
           userId: localStorage.getItem(USER_ID)

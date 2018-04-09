@@ -31,7 +31,7 @@ type Feed {
 type Transaction {
   transaction_id: ID!
   account_id: String!
-  category: [String!]!
+  category: [String!]
   category_id: String!
   transaction_type: String!
   name: String!
