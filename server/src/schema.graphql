@@ -3,6 +3,7 @@
 type Query {
   feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): Feed!
   transactions(userId: String!): [Transaction!]
+  connectedItem(userId: String!): PlaidItem
 }
 
 type Mutation {
@@ -57,4 +58,11 @@ type PaymentMeta {
   reference_number: String
   ppd_id: String
   payee_name: String
+}
+
+type PlaidItem {
+  available_products: [String!]
+  billed_products: [String!]
+  institution_id: String!
+  item_id: String!
 }
