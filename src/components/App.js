@@ -13,9 +13,9 @@ import BankTransactionList from './BankTransactionList';
 class App extends Component {
   render() {
     return (
-      <div className="center w85">
+      <div className="center">
         <Header />
-        <div className="ph3 pv1 background-gray">
+        <div className="ph3 pv1">
           <Switch>
             <Route exact path="/" component={LinkList} />
             <Route exact path="/create" component={CreateLink} />

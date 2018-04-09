@@ -8,46 +8,32 @@ class Header extends Component {
   render() {
     const authToken = localStorage.getItem(AUTH_TOKEN)
     return (
-      <div className="flex pa1 justify-between nowrap orange">
-        <div className="flex flex-fixed black">
-          <div className="fw7 mr1">Hacker News</div>
-          <Link to="/" className="ml1 no-underline black">
-            new
-          </Link>
+      <nav className="db dt-l w-100 border-box pa3 ph5-l bg-near-white">
+        <a className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l mb2 mb0-l" href="#" title="Home">
+          <img src="http://tachyons.io/img/logo.jpg" className="dib w2 h2 br-100" alt="Site Name" />
+        </a>
+        <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
+          <Link className="link dim dark-gray f6 f5-l dib mr3 mr4-l" to="/trip" title="Current Trip">Current Trip</Link>
+          <Link className="link dim dark-gray f6 f5-l dib mr3 mr4-l" to="/bank_transactions" title="Transactions">Transactions</Link>
 
-          <div className="ml1">|</div>
-          <Link to="/search" className="ml1 no-underline black">
-            search
-          </Link>
-
-          {authToken && (
-            <div className="flex">
-              <div className="ml1">|</div>
-              <Link to="/create" className="ml1 no-underline black">
-                submit
-              </Link>
-            </div>
-          )}
-          
-        </div>
-        <div className="flex flex-fixed">
           {authToken ? (
             <div
-              className="ml1 pointer black"
+              className="link dim dark-gray f6 f5-l dib"
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 localStorage.removeItem(AUTH_TOKEN)
                 this.props.history.push(`/`)
               }}
             >
-              logout
+              Log out
             </div>
           ) : (
             <Link to="/login" className="ml1 no-underline black">
-              login
+              Log in
             </Link>
           )}
         </div>
-      </div>
+      </nav>
     )
   }
 }
