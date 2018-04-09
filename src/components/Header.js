@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import { AUTH_TOKEN } from '../constants'
+import { AUTH_TOKEN, USER_ID } from '../constants';
 
 
 class Header extends Component {
@@ -21,8 +21,9 @@ class Header extends Component {
               className="link dim dark-gray f6 f5-l dib"
               style={{ cursor: "pointer" }}
               onClick={() => {
-                localStorage.removeItem(AUTH_TOKEN)
-                this.props.history.push(`/`)
+                localStorage.removeItem(AUTH_TOKEN);
+                localStorage.removeItem(USER_ID);
+                this.props.history.push(`/`);
               }}
             >
               Log out
@@ -39,3 +40,4 @@ class Header extends Component {
 }
 
 export default withRouter(Header);
+
