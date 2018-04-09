@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
-import { USER_ID } from '../constants';
 
 class Transaction extends Component {
 
@@ -20,7 +17,9 @@ class Transaction extends Component {
         <div className="dtc w2 w3-ns v-mid">
           <img
             src={this.state.imageUrl}
-            className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns" />
+            className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"
+            alt={this.props.transaction.category}
+          />
         </div>
 
 

@@ -72,7 +72,7 @@ class Login extends Component {
           password,
         },
       });
-      const { token: token, user: { id } } = result.data.login;
+      const { token, user: { id } } = result.data.login;
       this._saveUserData(token, id);
 
     } else {
@@ -83,7 +83,7 @@ class Login extends Component {
           password,
         },
       });
-      const { token: token, user: { id } } = result.data.signup;
+      const { token, user: { id } } = result.data.signup;
       this._saveUserData(token, id);
     }
 

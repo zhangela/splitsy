@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { graphql, Query } from 'react-apollo';
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import { PLAID_PUBLIC_KEY, USER_ID } from '../constants';

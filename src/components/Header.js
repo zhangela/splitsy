@@ -6,10 +6,10 @@ import { AUTH_TOKEN, USER_ID } from '../constants';
 
 class Header extends Component {
   render() {
-    const authToken = localStorage.getItem(AUTH_TOKEN)
+    const authToken = localStorage.getItem(AUTH_TOKEN);
     return (
       <nav className="db dt-l w-100 border-box pa3 ph5-l bg-near-white">
-        <a className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l mb2 mb0-l" href="#" title="Home">
+        <a className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l mb2 mb0-l" href="/" title="Home">
           <img src="http://tachyons.io/img/logo.jpg" className="dib w2 h2 br-100" alt="Site Name" />
         </a>
         <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
@@ -19,11 +19,11 @@ class Header extends Component {
           {authToken ? (
             <div
               className="link dim dark-gray f6 f5-l dib"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
               onClick={() => {
                 localStorage.removeItem(AUTH_TOKEN);
                 localStorage.removeItem(USER_ID);
-                this.props.history.push(`/`);
+                this.props.history.push('/');
               }}
             >
               Log out
@@ -35,7 +35,7 @@ class Header extends Component {
           )}
         </div>
       </nav>
-    )
+    );
   }
 }
 

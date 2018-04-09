@@ -6,7 +6,7 @@ class Home extends Component {
       <div>
         Welcome to splitsy. Please connect your bank account and add a trip!
       </div>
-    )
+    );
   }
 }
 
