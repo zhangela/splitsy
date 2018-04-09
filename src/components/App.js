@@ -6,6 +6,7 @@ import CreateLink from './CreateLink';
 import Login from './Login';
 import Search from './Search';
 import BankTransactionList from './BankTransactionList';
+import Home from './Home';
 
 // import logo from '../logo.svg';
 // import '../styles/App.css';
@@ -17,7 +18,7 @@ class App extends Component {
         <Header />
         <div className="ph3 pv1">
           <Switch>
-            <Route exact path="/" component={LinkList} />
+            <Route exact path="/" component={Home} />
             <Route exact path="/create" component={CreateLink} />
             <Route exact path="/login" component={Login} />
             <Route exact path='/search' component={Search}/>
