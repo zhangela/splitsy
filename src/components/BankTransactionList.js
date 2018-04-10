@@ -19,7 +19,7 @@ class BankTransactionList extends Component {
     }
 
     return (
-      <Query query={CONNECTED_ITEM_QUERY} variables={{ "userId": userId }}>
+      <Query query={CONNECTED_ITEM_QUERY} variables={{ userId }}>
         {({ loading, error, data }) => {
           if (loading) {
             return <div>Loading...</div>

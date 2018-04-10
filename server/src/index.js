@@ -1,12 +1,12 @@
-const { GraphQLServer } = require('graphql-yoga')
-const { Prisma } = require('prisma-binding')
+const { GraphQLServer } = require('graphql-yoga');
+const { Prisma } = require('prisma-binding');
 const plaid = require('plaid');
 const envvar = require('envvar');
 
-const Query = require('./resolvers/Query')
-const Mutation = require('./resolvers/Mutation')
-const Subscription = require('./resolvers/Subscription')
-const Feed = require('./resolvers/Feed')
+const Query = require('./resolvers/Query');
+const Mutation = require('./resolvers/Mutation');
+const Subscription = require('./resolvers/Subscription');
+const Feed = require('./resolvers/Feed');
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store

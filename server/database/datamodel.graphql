@@ -29,3 +29,49 @@ type Item {
   accessToken: String!
 }
 
+type Trip {
+  id: ID! @unique
+  name: String!
+  users: [User!]!
+  settled: Boolean!
+  transactions: [TripTransaction!]!
+}
+
+type TripTransaction {
+  id: ID! @unique
+  user: User!
+  transaction: Transaction!
+  trip: Trip!
+}
+
+type Transaction {
+  transaction_id: ID!
+  account_id: String!
+  category: [String!]
+  category_id: String!
+  transaction_type: String!
+  name: String!
+  amount: Float!
+  date: String!
+  location: Location
+  payment_meta: PaymentMeta
+  pending: Boolean!
+  pending_transaction_id: String
+  accountOwner: String
+}
+
+type Location {
+  address: String
+  city: String
+  state: String
+  zip: String
+  lat: String
+  lon: String
+}
+
+type PaymentMeta {
+  reference_number: String
+  ppd_id: String
+  payee_name: String
+}
+

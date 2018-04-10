@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import Header from './Header';
 import CreateLink from './CreateLink';
 import Login from './Login';
-import Search from './Search';
+import Trip from './Trip';
 import BankTransactionList from './BankTransactionList';
 import Home from './Home';
 
@@ -20,7 +20,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/create" component={CreateLink} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/search" component={Search} />
+            <Route exact path="/trip" component={Trip} />
             <Route exact path="/bank_transactions" component={BankTransactionList} />
           </Switch>
         </div>

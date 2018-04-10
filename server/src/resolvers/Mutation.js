@@ -103,10 +103,36 @@ async function storeAccessToken(
   return true;
 }
 
+async function createTrip(
+  parent,
+  { name, userIds },
+  ctx,
+  info
+) {
+
+  const trip = await ctx.db.mutation.createTrip(
+    {
+      data: {
+        name: name,
+        settled: false,
+        transactions: [],
+        users: {
+          connect: userIds.map((userId) => {
+            return { id: userId };
+          })
+        },
+      }
+    }
+  );
+  return trip;
+}
+
+
 module.exports = {
   post,
   signup,
   login,
   vote,
   storeAccessToken,
+  createTrip,
 }

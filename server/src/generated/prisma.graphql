@@ -21,6 +21,21 @@ type Link implements Node {
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
 }
 
+type Trip implements Node {
+  id: ID!
+  name: String!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  settled: Boolean!
+  transactions(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TripTransaction!]
+}
+
+type TripTransaction implements Node {
+  id: ID!
+  user(where: UserWhereInput): User!
+  transaction(where: TransactionWhereInput): Transaction!
+  trip(where: TripWhereInput): Trip!
+}
+
 type User implements Node {
   id: ID!
   name: String!
@@ -46,6 +61,26 @@ type AggregateItem {
 }
 
 type AggregateLink {
+  count: Int!
+}
+
+type AggregateLocation {
+  count: Int!
+}
+
+type AggregatePaymentMeta {
+  count: Int!
+}
+
+type AggregateTransaction {
+  count: Int!
+}
+
+type AggregateTrip {
+  count: Int!
+}
+
+type AggregateTripTransaction {
   count: Int!
 }
 
@@ -708,6 +743,482 @@ input LinkWhereUniqueInput {
   id: ID
 }
 
+type Location {
+  address: String
+  city: String
+  state: String
+  zip: String
+  lat: String
+  lon: String
+}
+
+"""
+A connection to a list of items.
+"""
+type LocationConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+  """
+  A list of edges.
+  """
+  edges: [LocationEdge]!
+  aggregate: AggregateLocation!
+}
+
+input LocationCreateInput {
+  address: String
+  city: String
+  state: String
+  zip: String
+  lat: String
+  lon: String
+}
+
+input LocationCreateOneInput {
+  create: LocationCreateInput
+}
+
+"""
+An edge in a connection.
+"""
+type LocationEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: Location!
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+}
+
+enum LocationOrderByInput {
+  address_ASC
+  address_DESC
+  city_ASC
+  city_DESC
+  state_ASC
+  state_DESC
+  zip_ASC
+  zip_DESC
+  lat_ASC
+  lat_DESC
+  lon_ASC
+  lon_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type LocationPreviousValues {
+  address: String
+  city: String
+  state: String
+  zip: String
+  lat: String
+  lon: String
+}
+
+type LocationSubscriptionPayload {
+  mutation: MutationType!
+  node: Location
+  updatedFields: [String!]
+  previousValues: LocationPreviousValues
+}
+
+input LocationSubscriptionWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [LocationSubscriptionWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [LocationSubscriptionWhereInput!]
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: LocationWhereInput
+}
+
+input LocationUpdateDataInput {
+  address: String
+  city: String
+  state: String
+  zip: String
+  lat: String
+  lon: String
+}
+
+input LocationUpdateInput {
+  address: String
+  city: String
+  state: String
+  zip: String
+  lat: String
+  lon: String
+}
+
+input LocationUpdateOneInput {
+  create: LocationCreateInput
+  disconnect: Boolean
+  delete: Boolean
+  update: LocationUpdateDataInput
+  upsert: LocationUpsertNestedInput
+}
+
+input LocationUpsertNestedInput {
+  update: LocationUpdateDataInput!
+  create: LocationCreateInput!
+}
+
+input LocationWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [LocationWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [LocationWhereInput!]
+  address: String
+  """
+  All values that are not equal to given value.
+  """
+  address_not: String
+  """
+  All values that are contained in given list.
+  """
+  address_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  address_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  address_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  address_lte: String
+  """
+  All values greater than the given value.
+  """
+  address_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  address_gte: String
+  """
+  All values containing the given string.
+  """
+  address_contains: String
+  """
+  All values not containing the given string.
+  """
+  address_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  address_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  address_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  address_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  address_not_ends_with: String
+  city: String
+  """
+  All values that are not equal to given value.
+  """
+  city_not: String
+  """
+  All values that are contained in given list.
+  """
+  city_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  city_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  city_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  city_lte: String
+  """
+  All values greater than the given value.
+  """
+  city_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  city_gte: String
+  """
+  All values containing the given string.
+  """
+  city_contains: String
+  """
+  All values not containing the given string.
+  """
+  city_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  city_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  city_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  city_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  city_not_ends_with: String
+  state: String
+  """
+  All values that are not equal to given value.
+  """
+  state_not: String
+  """
+  All values that are contained in given list.
+  """
+  state_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  state_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  state_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  state_lte: String
+  """
+  All values greater than the given value.
+  """
+  state_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  state_gte: String
+  """
+  All values containing the given string.
+  """
+  state_contains: String
+  """
+  All values not containing the given string.
+  """
+  state_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  state_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  state_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  state_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  state_not_ends_with: String
+  zip: String
+  """
+  All values that are not equal to given value.
+  """
+  zip_not: String
+  """
+  All values that are contained in given list.
+  """
+  zip_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  zip_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  zip_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  zip_lte: String
+  """
+  All values greater than the given value.
+  """
+  zip_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  zip_gte: String
+  """
+  All values containing the given string.
+  """
+  zip_contains: String
+  """
+  All values not containing the given string.
+  """
+  zip_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  zip_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  zip_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  zip_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  zip_not_ends_with: String
+  lat: String
+  """
+  All values that are not equal to given value.
+  """
+  lat_not: String
+  """
+  All values that are contained in given list.
+  """
+  lat_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  lat_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  lat_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  lat_lte: String
+  """
+  All values greater than the given value.
+  """
+  lat_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  lat_gte: String
+  """
+  All values containing the given string.
+  """
+  lat_contains: String
+  """
+  All values not containing the given string.
+  """
+  lat_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  lat_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  lat_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  lat_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  lat_not_ends_with: String
+  lon: String
+  """
+  All values that are not equal to given value.
+  """
+  lon_not: String
+  """
+  All values that are contained in given list.
+  """
+  lon_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  lon_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  lon_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  lon_lte: String
+  """
+  All values greater than the given value.
+  """
+  lon_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  lon_gte: String
+  """
+  All values containing the given string.
+  """
+  lon_contains: String
+  """
+  All values not containing the given string.
+  """
+  lon_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  lon_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  lon_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  lon_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  lon_not_ends_with: String
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -719,26 +1230,47 @@ type Mutation {
   createLink(data: LinkCreateInput!): Link!
   createUser(data: UserCreateInput!): User!
   createItem(data: ItemCreateInput!): Item!
+  createTrip(data: TripCreateInput!): Trip!
+  createTripTransaction(data: TripTransactionCreateInput!): TripTransaction!
+  createTransaction(data: TransactionCreateInput!): Transaction!
+  createLocation(data: LocationCreateInput!): Location!
+  createPaymentMeta(data: PaymentMetaCreateInput!): PaymentMeta!
   updateVote(data: VoteUpdateInput!, where: VoteWhereUniqueInput!): Vote
   updateLink(data: LinkUpdateInput!, where: LinkWhereUniqueInput!): Link
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateItem(data: ItemUpdateInput!, where: ItemWhereUniqueInput!): Item
+  updateTrip(data: TripUpdateInput!, where: TripWhereUniqueInput!): Trip
+  updateTripTransaction(data: TripTransactionUpdateInput!, where: TripTransactionWhereUniqueInput!): TripTransaction
   deleteVote(where: VoteWhereUniqueInput!): Vote
   deleteLink(where: LinkWhereUniqueInput!): Link
   deleteUser(where: UserWhereUniqueInput!): User
   deleteItem(where: ItemWhereUniqueInput!): Item
+  deleteTrip(where: TripWhereUniqueInput!): Trip
+  deleteTripTransaction(where: TripTransactionWhereUniqueInput!): TripTransaction
   upsertVote(where: VoteWhereUniqueInput!, create: VoteCreateInput!, update: VoteUpdateInput!): Vote!
   upsertLink(where: LinkWhereUniqueInput!, create: LinkCreateInput!, update: LinkUpdateInput!): Link!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertItem(where: ItemWhereUniqueInput!, create: ItemCreateInput!, update: ItemUpdateInput!): Item!
+  upsertTrip(where: TripWhereUniqueInput!, create: TripCreateInput!, update: TripUpdateInput!): Trip!
+  upsertTripTransaction(where: TripTransactionWhereUniqueInput!, create: TripTransactionCreateInput!, update: TripTransactionUpdateInput!): TripTransaction!
   updateManyVotes(data: VoteUpdateInput!, where: VoteWhereInput!): BatchPayload!
   updateManyLinks(data: LinkUpdateInput!, where: LinkWhereInput!): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!
   updateManyItems(data: ItemUpdateInput!, where: ItemWhereInput!): BatchPayload!
+  updateManyTrips(data: TripUpdateInput!, where: TripWhereInput!): BatchPayload!
+  updateManyTripTransactions(data: TripTransactionUpdateInput!, where: TripTransactionWhereInput!): BatchPayload!
+  updateManyTransactions(data: TransactionUpdateInput!, where: TransactionWhereInput!): BatchPayload!
+  updateManyLocations(data: LocationUpdateInput!, where: LocationWhereInput!): BatchPayload!
+  updateManyPaymentMetas(data: PaymentMetaUpdateInput!, where: PaymentMetaWhereInput!): BatchPayload!
   deleteManyVotes(where: VoteWhereInput!): BatchPayload!
   deleteManyLinks(where: LinkWhereInput!): BatchPayload!
   deleteManyUsers(where: UserWhereInput!): BatchPayload!
   deleteManyItems(where: ItemWhereInput!): BatchPayload!
+  deleteManyTrips(where: TripWhereInput!): BatchPayload!
+  deleteManyTripTransactions(where: TripTransactionWhereInput!): BatchPayload!
+  deleteManyTransactions(where: TransactionWhereInput!): BatchPayload!
+  deleteManyLocations(where: LocationWhereInput!): BatchPayload!
+  deleteManyPaymentMetas(where: PaymentMetaWhereInput!): BatchPayload!
 }
 
 enum MutationType {
@@ -779,19 +1311,327 @@ type PageInfo {
   endCursor: String
 }
 
+type PaymentMeta {
+  reference_number: String
+  ppd_id: String
+  payee_name: String
+}
+
+"""
+A connection to a list of items.
+"""
+type PaymentMetaConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+  """
+  A list of edges.
+  """
+  edges: [PaymentMetaEdge]!
+  aggregate: AggregatePaymentMeta!
+}
+
+input PaymentMetaCreateInput {
+  reference_number: String
+  ppd_id: String
+  payee_name: String
+}
+
+input PaymentMetaCreateOneInput {
+  create: PaymentMetaCreateInput
+}
+
+"""
+An edge in a connection.
+"""
+type PaymentMetaEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: PaymentMeta!
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+}
+
+enum PaymentMetaOrderByInput {
+  reference_number_ASC
+  reference_number_DESC
+  ppd_id_ASC
+  ppd_id_DESC
+  payee_name_ASC
+  payee_name_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type PaymentMetaPreviousValues {
+  reference_number: String
+  ppd_id: String
+  payee_name: String
+}
+
+type PaymentMetaSubscriptionPayload {
+  mutation: MutationType!
+  node: PaymentMeta
+  updatedFields: [String!]
+  previousValues: PaymentMetaPreviousValues
+}
+
+input PaymentMetaSubscriptionWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [PaymentMetaSubscriptionWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [PaymentMetaSubscriptionWhereInput!]
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: PaymentMetaWhereInput
+}
+
+input PaymentMetaUpdateDataInput {
+  reference_number: String
+  ppd_id: String
+  payee_name: String
+}
+
+input PaymentMetaUpdateInput {
+  reference_number: String
+  ppd_id: String
+  payee_name: String
+}
+
+input PaymentMetaUpdateOneInput {
+  create: PaymentMetaCreateInput
+  disconnect: Boolean
+  delete: Boolean
+  update: PaymentMetaUpdateDataInput
+  upsert: PaymentMetaUpsertNestedInput
+}
+
+input PaymentMetaUpsertNestedInput {
+  update: PaymentMetaUpdateDataInput!
+  create: PaymentMetaCreateInput!
+}
+
+input PaymentMetaWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [PaymentMetaWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [PaymentMetaWhereInput!]
+  reference_number: String
+  """
+  All values that are not equal to given value.
+  """
+  reference_number_not: String
+  """
+  All values that are contained in given list.
+  """
+  reference_number_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  reference_number_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  reference_number_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  reference_number_lte: String
+  """
+  All values greater than the given value.
+  """
+  reference_number_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  reference_number_gte: String
+  """
+  All values containing the given string.
+  """
+  reference_number_contains: String
+  """
+  All values not containing the given string.
+  """
+  reference_number_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  reference_number_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  reference_number_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  reference_number_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  reference_number_not_ends_with: String
+  ppd_id: String
+  """
+  All values that are not equal to given value.
+  """
+  ppd_id_not: String
+  """
+  All values that are contained in given list.
+  """
+  ppd_id_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  ppd_id_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  ppd_id_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  ppd_id_lte: String
+  """
+  All values greater than the given value.
+  """
+  ppd_id_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  ppd_id_gte: String
+  """
+  All values containing the given string.
+  """
+  ppd_id_contains: String
+  """
+  All values not containing the given string.
+  """
+  ppd_id_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  ppd_id_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  ppd_id_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  ppd_id_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  ppd_id_not_ends_with: String
+  payee_name: String
+  """
+  All values that are not equal to given value.
+  """
+  payee_name_not: String
+  """
+  All values that are contained in given list.
+  """
+  payee_name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  payee_name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  payee_name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  payee_name_lte: String
+  """
+  All values greater than the given value.
+  """
+  payee_name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  payee_name_gte: String
+  """
+  All values containing the given string.
+  """
+  payee_name_contains: String
+  """
+  All values not containing the given string.
+  """
+  payee_name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  payee_name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  payee_name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  payee_name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  payee_name_not_ends_with: String
+}
+
 type Query {
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote]!
   links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item]!
+  trips(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trip]!
+  tripTransactions(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TripTransaction]!
+  transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction]!
+  locations(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Location]!
+  paymentMetas(where: PaymentMetaWhereInput, orderBy: PaymentMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMeta]!
   vote(where: VoteWhereUniqueInput!): Vote
   link(where: LinkWhereUniqueInput!): Link
   user(where: UserWhereUniqueInput!): User
   item(where: ItemWhereUniqueInput!): Item
+  trip(where: TripWhereUniqueInput!): Trip
+  tripTransaction(where: TripTransactionWhereUniqueInput!): TripTransaction
   votesConnection(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
   linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   itemsConnection(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemConnection!
+  tripsConnection(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TripConnection!
+  tripTransactionsConnection(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TripTransactionConnection!
+  transactionsConnection(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TransactionConnection!
+  locationsConnection(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LocationConnection!
+  paymentMetasConnection(where: PaymentMetaWhereInput, orderBy: PaymentMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentMetaConnection!
   """
   Fetches an object given its ID
   """
@@ -806,6 +1646,1131 @@ type Subscription {
   link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   item(where: ItemSubscriptionWhereInput): ItemSubscriptionPayload
+  trip(where: TripSubscriptionWhereInput): TripSubscriptionPayload
+  tripTransaction(where: TripTransactionSubscriptionWhereInput): TripTransactionSubscriptionPayload
+  transaction(where: TransactionSubscriptionWhereInput): TransactionSubscriptionPayload
+  location(where: LocationSubscriptionWhereInput): LocationSubscriptionPayload
+  paymentMeta(where: PaymentMetaSubscriptionWhereInput): PaymentMetaSubscriptionPayload
+}
+
+type Transaction {
+  transaction_id: ID!
+  account_id: String!
+  category: [String!]
+  category_id: String!
+  transaction_type: String!
+  name: String!
+  amount: Float!
+  date: String!
+  location(where: LocationWhereInput): Location
+  payment_meta(where: PaymentMetaWhereInput): PaymentMeta
+  pending: Boolean!
+  pending_transaction_id: String
+  accountOwner: String
+}
+
+"""
+A connection to a list of items.
+"""
+type TransactionConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+  """
+  A list of edges.
+  """
+  edges: [TransactionEdge]!
+  aggregate: AggregateTransaction!
+}
+
+input TransactionCreatecategoryInput {
+  set: [String!]
+}
+
+input TransactionCreateInput {
+  transaction_id: ID!
+  account_id: String!
+  category_id: String!
+  transaction_type: String!
+  name: String!
+  amount: Float!
+  date: String!
+  pending: Boolean!
+  pending_transaction_id: String
+  accountOwner: String
+  category: TransactionCreatecategoryInput
+  location: LocationCreateOneInput
+  payment_meta: PaymentMetaCreateOneInput
+}
+
+input TransactionCreateOneInput {
+  create: TransactionCreateInput
+}
+
+"""
+An edge in a connection.
+"""
+type TransactionEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: Transaction!
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+}
+
+enum TransactionOrderByInput {
+  transaction_id_ASC
+  transaction_id_DESC
+  account_id_ASC
+  account_id_DESC
+  category_id_ASC
+  category_id_DESC
+  transaction_type_ASC
+  transaction_type_DESC
+  name_ASC
+  name_DESC
+  amount_ASC
+  amount_DESC
+  date_ASC
+  date_DESC
+  pending_ASC
+  pending_DESC
+  pending_transaction_id_ASC
+  pending_transaction_id_DESC
+  accountOwner_ASC
+  accountOwner_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TransactionPreviousValues {
+  transaction_id: ID!
+  account_id: String!
+  category: [String!]
+  category_id: String!
+  transaction_type: String!
+  name: String!
+  amount: Float!
+  date: String!
+  pending: Boolean!
+  pending_transaction_id: String
+  accountOwner: String
+}
+
+type TransactionSubscriptionPayload {
+  mutation: MutationType!
+  node: Transaction
+  updatedFields: [String!]
+  previousValues: TransactionPreviousValues
+}
+
+input TransactionSubscriptionWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TransactionSubscriptionWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TransactionSubscriptionWhereInput!]
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TransactionWhereInput
+}
+
+input TransactionUpdatecategoryInput {
+  set: [String!]
+}
+
+input TransactionUpdateDataInput {
+  transaction_id: ID
+  account_id: String
+  category_id: String
+  transaction_type: String
+  name: String
+  amount: Float
+  date: String
+  pending: Boolean
+  pending_transaction_id: String
+  accountOwner: String
+  category: TransactionUpdatecategoryInput
+  location: LocationUpdateOneInput
+  payment_meta: PaymentMetaUpdateOneInput
+}
+
+input TransactionUpdateInput {
+  transaction_id: ID
+  account_id: String
+  category_id: String
+  transaction_type: String
+  name: String
+  amount: Float
+  date: String
+  pending: Boolean
+  pending_transaction_id: String
+  accountOwner: String
+  category: TransactionUpdatecategoryInput
+  location: LocationUpdateOneInput
+  payment_meta: PaymentMetaUpdateOneInput
+}
+
+input TransactionUpdateOneInput {
+  create: TransactionCreateInput
+  delete: Boolean
+  update: TransactionUpdateDataInput
+  upsert: TransactionUpsertNestedInput
+}
+
+input TransactionUpsertNestedInput {
+  update: TransactionUpdateDataInput!
+  create: TransactionCreateInput!
+}
+
+input TransactionWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TransactionWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TransactionWhereInput!]
+  transaction_id: ID
+  """
+  All values that are not equal to given value.
+  """
+  transaction_id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  transaction_id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  transaction_id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  transaction_id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  transaction_id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  transaction_id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  transaction_id_gte: ID
+  """
+  All values containing the given string.
+  """
+  transaction_id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  transaction_id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  transaction_id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  transaction_id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  transaction_id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  transaction_id_not_ends_with: ID
+  account_id: String
+  """
+  All values that are not equal to given value.
+  """
+  account_id_not: String
+  """
+  All values that are contained in given list.
+  """
+  account_id_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  account_id_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  account_id_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  account_id_lte: String
+  """
+  All values greater than the given value.
+  """
+  account_id_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  account_id_gte: String
+  """
+  All values containing the given string.
+  """
+  account_id_contains: String
+  """
+  All values not containing the given string.
+  """
+  account_id_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  account_id_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  account_id_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  account_id_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  account_id_not_ends_with: String
+  category_id: String
+  """
+  All values that are not equal to given value.
+  """
+  category_id_not: String
+  """
+  All values that are contained in given list.
+  """
+  category_id_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  category_id_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  category_id_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  category_id_lte: String
+  """
+  All values greater than the given value.
+  """
+  category_id_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  category_id_gte: String
+  """
+  All values containing the given string.
+  """
+  category_id_contains: String
+  """
+  All values not containing the given string.
+  """
+  category_id_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  category_id_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  category_id_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  category_id_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  category_id_not_ends_with: String
+  transaction_type: String
+  """
+  All values that are not equal to given value.
+  """
+  transaction_type_not: String
+  """
+  All values that are contained in given list.
+  """
+  transaction_type_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  transaction_type_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  transaction_type_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  transaction_type_lte: String
+  """
+  All values greater than the given value.
+  """
+  transaction_type_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  transaction_type_gte: String
+  """
+  All values containing the given string.
+  """
+  transaction_type_contains: String
+  """
+  All values not containing the given string.
+  """
+  transaction_type_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  transaction_type_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  transaction_type_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  transaction_type_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  transaction_type_not_ends_with: String
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  amount: Float
+  """
+  All values that are not equal to given value.
+  """
+  amount_not: Float
+  """
+  All values that are contained in given list.
+  """
+  amount_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  amount_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  amount_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  amount_lte: Float
+  """
+  All values greater than the given value.
+  """
+  amount_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  amount_gte: Float
+  date: String
+  """
+  All values that are not equal to given value.
+  """
+  date_not: String
+  """
+  All values that are contained in given list.
+  """
+  date_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  date_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  date_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  date_lte: String
+  """
+  All values greater than the given value.
+  """
+  date_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  date_gte: String
+  """
+  All values containing the given string.
+  """
+  date_contains: String
+  """
+  All values not containing the given string.
+  """
+  date_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  date_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  date_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  date_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  date_not_ends_with: String
+  pending: Boolean
+  """
+  All values that are not equal to given value.
+  """
+  pending_not: Boolean
+  pending_transaction_id: String
+  """
+  All values that are not equal to given value.
+  """
+  pending_transaction_id_not: String
+  """
+  All values that are contained in given list.
+  """
+  pending_transaction_id_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  pending_transaction_id_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  pending_transaction_id_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  pending_transaction_id_lte: String
+  """
+  All values greater than the given value.
+  """
+  pending_transaction_id_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  pending_transaction_id_gte: String
+  """
+  All values containing the given string.
+  """
+  pending_transaction_id_contains: String
+  """
+  All values not containing the given string.
+  """
+  pending_transaction_id_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  pending_transaction_id_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  pending_transaction_id_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  pending_transaction_id_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  pending_transaction_id_not_ends_with: String
+  accountOwner: String
+  """
+  All values that are not equal to given value.
+  """
+  accountOwner_not: String
+  """
+  All values that are contained in given list.
+  """
+  accountOwner_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  accountOwner_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  accountOwner_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  accountOwner_lte: String
+  """
+  All values greater than the given value.
+  """
+  accountOwner_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  accountOwner_gte: String
+  """
+  All values containing the given string.
+  """
+  accountOwner_contains: String
+  """
+  All values not containing the given string.
+  """
+  accountOwner_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  accountOwner_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  accountOwner_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  accountOwner_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  accountOwner_not_ends_with: String
+  location: LocationWhereInput
+  payment_meta: PaymentMetaWhereInput
+}
+
+"""
+A connection to a list of items.
+"""
+type TripConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+  """
+  A list of edges.
+  """
+  edges: [TripEdge]!
+  aggregate: AggregateTrip!
+}
+
+input TripCreateInput {
+  name: String!
+  settled: Boolean!
+  users: UserCreateManyInput
+  transactions: TripTransactionCreateManyWithoutTripInput
+}
+
+input TripCreateOneWithoutTransactionsInput {
+  create: TripCreateWithoutTransactionsInput
+  connect: TripWhereUniqueInput
+}
+
+input TripCreateWithoutTransactionsInput {
+  name: String!
+  settled: Boolean!
+  users: UserCreateManyInput
+}
+
+"""
+An edge in a connection.
+"""
+type TripEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: Trip!
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+}
+
+enum TripOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  settled_ASC
+  settled_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TripPreviousValues {
+  id: ID!
+  name: String!
+  settled: Boolean!
+}
+
+type TripSubscriptionPayload {
+  mutation: MutationType!
+  node: Trip
+  updatedFields: [String!]
+  previousValues: TripPreviousValues
+}
+
+input TripSubscriptionWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TripSubscriptionWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TripSubscriptionWhereInput!]
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TripWhereInput
+}
+
+"""
+A connection to a list of items.
+"""
+type TripTransactionConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+  """
+  A list of edges.
+  """
+  edges: [TripTransactionEdge]!
+  aggregate: AggregateTripTransaction!
+}
+
+input TripTransactionCreateInput {
+  user: UserCreateOneInput!
+  transaction: TransactionCreateOneInput!
+  trip: TripCreateOneWithoutTransactionsInput!
+}
+
+input TripTransactionCreateManyWithoutTripInput {
+  create: [TripTransactionCreateWithoutTripInput!]
+  connect: [TripTransactionWhereUniqueInput!]
+}
+
+input TripTransactionCreateWithoutTripInput {
+  user: UserCreateOneInput!
+  transaction: TransactionCreateOneInput!
+}
+
+"""
+An edge in a connection.
+"""
+type TripTransactionEdge {
+  """
+  The item at the end of the edge.
+  """
+  node: TripTransaction!
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+}
+
+enum TripTransactionOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TripTransactionPreviousValues {
+  id: ID!
+}
+
+type TripTransactionSubscriptionPayload {
+  mutation: MutationType!
+  node: TripTransaction
+  updatedFields: [String!]
+  previousValues: TripTransactionPreviousValues
+}
+
+input TripTransactionSubscriptionWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TripTransactionSubscriptionWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TripTransactionSubscriptionWhereInput!]
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TripTransactionWhereInput
+}
+
+input TripTransactionUpdateInput {
+  user: UserUpdateOneInput
+  transaction: TransactionUpdateOneInput
+  trip: TripUpdateOneWithoutTransactionsInput
+}
+
+input TripTransactionUpdateManyWithoutTripInput {
+  create: [TripTransactionCreateWithoutTripInput!]
+  connect: [TripTransactionWhereUniqueInput!]
+  disconnect: [TripTransactionWhereUniqueInput!]
+  delete: [TripTransactionWhereUniqueInput!]
+  update: [TripTransactionUpdateWithWhereUniqueWithoutTripInput!]
+  upsert: [TripTransactionUpsertWithWhereUniqueWithoutTripInput!]
+}
+
+input TripTransactionUpdateWithoutTripDataInput {
+  user: UserUpdateOneInput
+  transaction: TransactionUpdateOneInput
+}
+
+input TripTransactionUpdateWithWhereUniqueWithoutTripInput {
+  where: TripTransactionWhereUniqueInput!
+  data: TripTransactionUpdateWithoutTripDataInput!
+}
+
+input TripTransactionUpsertWithWhereUniqueWithoutTripInput {
+  where: TripTransactionWhereUniqueInput!
+  update: TripTransactionUpdateWithoutTripDataInput!
+  create: TripTransactionCreateWithoutTripInput!
+}
+
+input TripTransactionWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TripTransactionWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TripTransactionWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  user: UserWhereInput
+  transaction: TransactionWhereInput
+  trip: TripWhereInput
+}
+
+input TripTransactionWhereUniqueInput {
+  id: ID
+}
+
+input TripUpdateInput {
+  name: String
+  settled: Boolean
+  users: UserUpdateManyInput
+  transactions: TripTransactionUpdateManyWithoutTripInput
+}
+
+input TripUpdateOneWithoutTransactionsInput {
+  create: TripCreateWithoutTransactionsInput
+  connect: TripWhereUniqueInput
+  delete: Boolean
+  update: TripUpdateWithoutTransactionsDataInput
+  upsert: TripUpsertWithoutTransactionsInput
+}
+
+input TripUpdateWithoutTransactionsDataInput {
+  name: String
+  settled: Boolean
+  users: UserUpdateManyInput
+}
+
+input TripUpsertWithoutTransactionsInput {
+  update: TripUpdateWithoutTransactionsDataInput!
+  create: TripCreateWithoutTransactionsInput!
+}
+
+input TripWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TripWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TripWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  settled: Boolean
+  """
+  All values that are not equal to given value.
+  """
+  settled_not: Boolean
+  users_every: UserWhereInput
+  users_some: UserWhereInput
+  users_none: UserWhereInput
+  transactions_every: TripTransactionWhereInput
+  transactions_some: TripTransactionWhereInput
+  transactions_none: TripTransactionWhereInput
+}
+
+input TripWhereUniqueInput {
+  id: ID
 }
 
 """
@@ -829,6 +2794,11 @@ input UserCreateInput {
   password: String!
   links: LinkCreateManyWithoutPostedByInput
   votes: VoteCreateManyWithoutUserInput
+}
+
+input UserCreateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateOneInput {
@@ -947,6 +2917,15 @@ input UserUpdateInput {
   votes: VoteUpdateManyWithoutUserInput
 }
 
+input UserUpdateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueNestedInput!]
+  upsert: [UserUpsertWithWhereUniqueNestedInput!]
+}
+
 input UserUpdateOneInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
@@ -986,6 +2965,11 @@ input UserUpdateWithoutVotesDataInput {
   links: LinkUpdateManyWithoutPostedByInput
 }
 
+input UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateDataInput!
+}
+
 input UserUpsertNestedInput {
   update: UserUpdateDataInput!
   create: UserCreateInput!
@@ -999,6 +2983,12 @@ input UserUpsertWithoutLinksInput {
 input UserUpsertWithoutVotesInput {
   update: UserUpdateWithoutVotesDataInput!
   create: UserCreateWithoutVotesInput!
+}
+
+input UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserWhereInput {

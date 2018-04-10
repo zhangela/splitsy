@@ -13,8 +13,21 @@ class Header extends Component {
           <img src="http://tachyons.io/img/logo.jpg" className="dib w2 h2 br-100" alt="Site Name" />
         </a>
         <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
-          <Link className="link dim dark-gray f6 f5-l dib mr3 mr4-l" to="/trip" title="Current Trip">Current Trip</Link>
-          <Link className="link dim dark-gray f6 f5-l dib mr3 mr4-l" to="/bank_transactions" title="Transactions">Transactions</Link>
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to="/trip"
+            title="Current Trip"
+          >
+            Current Trip
+          </Link>
+
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to="/bank_transactions"
+            title="Transactions"
+          >
+            Transactions
+          </Link>
 
           {authToken ? (
             <div

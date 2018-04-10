@@ -1,23 +1,5 @@
 const moment = require('moment');
 
-async function feed(parent, args, ctx, info) {
-  const { filter, first, skip } = args // destructure input arguments
-  const where = filter
-    ? { OR: [{ url_contains: filter }, { description_contains: filter }] }
-    : {}
-
-  const allLinks = await ctx.db.query.links({})
-  const count = allLinks.length
-
-  const queriedLinkes = await ctx.db.query.links({ first, skip, where })
-
-  return {
-    linkIds: queriedLinkes.map(link => link.id),
-    count
-  }
-}
-
-
 async function transactions(parent, { userId }, ctx, info) {
   // Pull transactions for the Item for the last 30 days
   const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -63,8 +45,33 @@ async function connectedItem(parent, { userId }, ctx, info) {
   return itemData.item;
 }
 
+async function currentTrip(parent, { userId }, ctx, info) {
+  const trips = await ctx.db.query.trips({
+    where: {
+      AND: {
+        users_some: { id: userId },
+        settled: false
+      }
+    }
+  }, info); // the `info` param is very important, otherwise, nested fields would not show up :(
+
+  if (!trips || trips.length === 0) {
+    return;
+  }
+
+  // TODO: for now, assume each user is only in 1 active trip.
+  const trip = trips[0];
+  return trip;
+}
+
+async function availableUsers(parent, { userId }, ctx, info) {
+  const users = await ctx.db.query.users();
+  return users;
+}
+
 module.exports = {
-  feed,
   transactions,
-  connectedItem
+  connectedItem,
+  currentTrip,
+  availableUsers,
 }
