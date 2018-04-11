@@ -8,10 +8,6 @@ type Query {
 }
 
 type Mutation {
-  storeAccessToken(publicToken: String!, userId: String!): Boolean!
-  createTrip(name: String!, userIds: [String!]!): Trip!
-
-  post(url: String!, description: String!): Link!
   signup(email: String!, password: String!, name: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
 
@@ -34,11 +30,6 @@ type Subscription {
 type AuthPayload {
   token: String
   user: User
-}
-
-type Feed {
-  links: [Link!]!
-  count: Int!
 }
 
 type PlaidItem {
