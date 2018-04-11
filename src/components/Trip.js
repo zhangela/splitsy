@@ -22,18 +22,54 @@ class Trip extends Component {
 
           if (!data.currentTrip) {
             return <CreateTrip />
-          } else {
-            return (
-              <div>
-                You have a trip!
-                {data.currentTrip.id}
-                {data.currentTrip.name}
-                {data.currentTrip.users.map((user) => {
-                  return <div key={user.id}>{user.name}</div>
-                })}
-              </div>
-            );
           }
+          return (
+            <div>
+              <h2 className="lh-solid">Current Trip</h2>
+              <article className="cf">
+                <div className="fl w-100 w-50-ns bg-near-white">
+                  <div className="mt1">
+                    <div className="db fw4 lh-copy f6 pa3">
+                      <span className="b">Trip Name:</span>
+                      <div className="mt2 pa2 input-reset ba bg-transparent w-100 measure">
+                        {data.currentTrip.name}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt2">
+                    <div className="db fw4 lh-copy f6 pa3">
+                      <span className="b">Participants:</span>
+                      <div className="mt2 pa2 input-reset ba bg-transparent w-100 measure">
+                        {data.currentTrip.users.map((user) => {
+                          return <div key={user.id}>{user.name}</div>
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt2">
+                    <div className="db fw4 lh-copy f6 pa3">
+                      <span className="b">Settled:</span>
+                      <div className="mt2 pa2 input-reset ba bg-transparent w-100 measure">
+                        {data.currentTrip.settled ? "Yes" : "No"}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div className="fl w-100 w-50-ns pl3">
+                  <div className="db fw4 lh-copy f6 pa3 mt3">
+                    <span className="b">Transactions:</span>
+                    <div className="mt2 pa2 input-reset ba bg-transparent w-100 measure">
+                        <div>t1</div>
+                        <div>t2</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          );
         }}
       </Query>
     );
@@ -45,9 +81,13 @@ const CURRENT_TRIP_QUERY = gql`
     currentTrip(userId: $userId) {
       id
       name
+      settled
       users {
         id
         name
+      }
+      transactions {
+        id
       }
     }
   }
