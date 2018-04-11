@@ -131,6 +131,45 @@ async function addTransactionToTrip(
   return tripTransaction;
 }
 
+async function removeTransactionFromTrip(
+  parent,
+  { tripId, plaidTransactionId },
+  ctx,
+  info
+) {
+
+  const tripTransactions = await ctx.db.query.tripTransactions({
+    where: {
+      AND: [
+        { plaidTransactionId: plaidTransactionId },
+        { trip:  { id: tripId } }
+      ]
+    }
+  });
+
+  // this plaid transaction isn't in the trip
+  // TODO: throw error if tripTransactions.length > 1
+  if (!tripTransactions || tripTransactions.length === 0) {
+    return false;
+  }
+
+  const tripTransaction = tripTransactions[0];
+  const trip = await ctx.db.mutation.updateTrip({
+    data: {
+      transactions: {
+        delete: {
+          id: tripTransaction.id
+        }
+      }
+    },
+    where: {
+      id: tripId
+    },
+  });
+
+  return true;
+}
+
 
 module.exports = {
   signup,
@@ -138,4 +177,5 @@ module.exports = {
   storeAccessToken,
   createTrip,
   addTransactionToTrip,
+  removeTransactionFromTrip,
 }

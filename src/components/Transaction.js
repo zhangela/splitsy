@@ -67,16 +67,29 @@ class Transaction extends Component {
 
                   // Transaction already in current trip
                   return (
-                    <div className="fl w-25 tc pv3">
-                      <form className="w-100 tr">
-                        <button
-                          className="f6 button-reset bg-light-gray ba b--black-10 dim pointer pv1 black-60"
-                          type="submit"
-                        >
-                        - Remove
-                        </button>
-                      </form>
-                    </div>
+                    <Mutation mutation={REMOVE_TRANSACTION_FROM_TRIP_MUTATION}>
+                      {(removeTransactionFromTrip, { data }) => (
+                        <div className="fl w-25 tc pv3">
+                          <form className="w-100 tr">
+                            <button
+                              className="f6 button-reset bg-light-gray ba b--black-10 dim pointer pv1 black-60"
+                              type="submit"
+                              onClick={e => {
+                                e.preventDefault();
+                                removeTransactionFromTrip({
+                                  variables: {
+                                    tripId: currentTrip.id,
+                                    plaidTransactionId: t.transaction_id,
+                                  }
+                                });
+                              }}
+                            >
+                            - Remove
+                            </button>
+                          </form>
+                        </div>
+                      )}
+                    </Mutation>
                   );
 
                 } else {
@@ -171,12 +184,15 @@ const ADD_TRANSACTION_TO_TRIP_MUTATION = gql`
   }
 `;
 
-const REMOVE_TRANSACTION_TO_TRIP_MUTATION = gql`
-  mutation RemoveTransactionToTripMutation(
+const REMOVE_TRANSACTION_FROM_TRIP_MUTATION = gql`
+  mutation RemoveTransactionFromTripMutation(
     $tripId: String!
     $plaidTransactionId: String!
   ){
-    removeTransactionFromTrip(tripId: $tripId, plaidTransactionId: $plaidTransactionId)
+    removeTransactionFromTrip(
+      tripId: $tripId,
+      plaidTransactionId: $plaidTransactionId
+    )
   }
 `;
 

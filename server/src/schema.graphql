@@ -13,6 +13,7 @@ type Mutation {
 
   storeAccessToken(publicToken: String!, userId: String!): Boolean!
   createTrip(name: String!, userIds: [String!]!): Trip!
+
   addTransactionToTrip(
     tripId: String!,
     plaidTransactionId: String!,
@@ -20,6 +21,10 @@ type Mutation {
     name: String!,
     amount: Float!,
     date: String!): TripTransaction
+
+  removeTransactionFromTrip(
+    tripId: String!,
+    plaidTransactionId: String!): Boolean!
 }
 
 type Subscription {
