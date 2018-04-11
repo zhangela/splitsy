@@ -147,7 +147,7 @@ const AVAILABLE_USERS_QUERY = gql`
   }
 `;
 
-const CREATE_TRIP_MUTATION = gql `
+const CREATE_TRIP_MUTATION = gql`
   mutation CreateTripMutation(
     $name: String!
     $userIds: [String!]!
@@ -156,6 +156,6 @@ const CREATE_TRIP_MUTATION = gql `
       id
     }
   }
-`
+`;
 
 export default CreateTrip;

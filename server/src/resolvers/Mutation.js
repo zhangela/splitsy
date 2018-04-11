@@ -127,6 +127,49 @@ async function createTrip(
   return trip;
 }
 
+async function addTransactionToTrip(
+  parent,
+  { tripId, plaidTransactionId, category, name, amount, date },
+  ctx,
+  info
+) {
+
+  const currentUserId = getUserId(ctx);
+
+  // first check if this trip already has a trip transaction in this trip for
+  // this plaid transaction
+  // TODO: add this!!
+
+  // first make a TripTransaction
+  const tripTransaction = await ctx.db.mutation.createTripTransaction({
+    data: {
+      plaidTransactionId: plaidTransactionId,
+      name: name,
+      amount: amount,
+      date: date,
+      category: { set: category },
+      user: { connect: { id: currentUserId } },
+      trip: { connect: { id: tripId } },
+    }
+  }, info);
+
+  // then insert TripTransaction to Trip
+  const trip = await ctx.db.mutation.updateTrip({
+    data: {
+      transactions: {
+        connect: {
+          id: tripTransaction.id
+        }
+      }
+    },
+    where: {
+      id: tripId
+    },
+  }, info);
+
+  return tripTransaction;
+}
+
 
 module.exports = {
   post,
@@ -135,4 +178,5 @@ module.exports = {
   vote,
   storeAccessToken,
   createTrip,
+  addTransactionToTrip,
 }

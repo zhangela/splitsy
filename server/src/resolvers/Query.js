@@ -51,7 +51,7 @@ async function currentTrip(parent, { userId }, ctx, info) {
       AND: {
         users_some: { id: userId },
         settled: false
-      }
+      } 
     }
   }, info); // the `info` param is very important, otherwise, nested fields would not show up :(
 

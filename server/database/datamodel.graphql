@@ -40,8 +40,16 @@ type Trip {
 type TripTransaction {
   id: ID! @unique
   user: User!
-  transaction: Transaction!
   trip: Trip!
+
+  # originally i wanted to just link to transaction,
+  # but I don't want to pass each field manually from client to server
+  # and store all fields, so let's just store these fields.
+  plaidTransactionId: String!
+  category: [String!]
+  name: String!
+  amount: Float!
+  date: String!
 }
 
 type Transaction {

@@ -32,8 +32,12 @@ type Trip implements Node {
 type TripTransaction implements Node {
   id: ID!
   user(where: UserWhereInput): User!
-  transaction(where: TransactionWhereInput): Transaction!
   trip(where: TripWhereInput): Trip!
+  plaidTransactionId: String!
+  category: [String!]
+  name: String!
+  amount: Float!
+  date: String!
 }
 
 type User implements Node {
@@ -1253,24 +1257,24 @@ type Mutation {
   upsertItem(where: ItemWhereUniqueInput!, create: ItemCreateInput!, update: ItemUpdateInput!): Item!
   upsertTrip(where: TripWhereUniqueInput!, create: TripCreateInput!, update: TripUpdateInput!): Trip!
   upsertTripTransaction(where: TripTransactionWhereUniqueInput!, create: TripTransactionCreateInput!, update: TripTransactionUpdateInput!): TripTransaction!
-  updateManyVotes(data: VoteUpdateInput!, where: VoteWhereInput!): BatchPayload!
-  updateManyLinks(data: LinkUpdateInput!, where: LinkWhereInput!): BatchPayload!
-  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!
-  updateManyItems(data: ItemUpdateInput!, where: ItemWhereInput!): BatchPayload!
-  updateManyTrips(data: TripUpdateInput!, where: TripWhereInput!): BatchPayload!
-  updateManyTripTransactions(data: TripTransactionUpdateInput!, where: TripTransactionWhereInput!): BatchPayload!
-  updateManyTransactions(data: TransactionUpdateInput!, where: TransactionWhereInput!): BatchPayload!
-  updateManyLocations(data: LocationUpdateInput!, where: LocationWhereInput!): BatchPayload!
-  updateManyPaymentMetas(data: PaymentMetaUpdateInput!, where: PaymentMetaWhereInput!): BatchPayload!
-  deleteManyVotes(where: VoteWhereInput!): BatchPayload!
-  deleteManyLinks(where: LinkWhereInput!): BatchPayload!
-  deleteManyUsers(where: UserWhereInput!): BatchPayload!
-  deleteManyItems(where: ItemWhereInput!): BatchPayload!
-  deleteManyTrips(where: TripWhereInput!): BatchPayload!
-  deleteManyTripTransactions(where: TripTransactionWhereInput!): BatchPayload!
-  deleteManyTransactions(where: TransactionWhereInput!): BatchPayload!
-  deleteManyLocations(where: LocationWhereInput!): BatchPayload!
-  deleteManyPaymentMetas(where: PaymentMetaWhereInput!): BatchPayload!
+  updateManyVotes(data: VoteUpdateInput!, where: VoteWhereInput): BatchPayload!
+  updateManyLinks(data: LinkUpdateInput!, where: LinkWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
+  updateManyItems(data: ItemUpdateInput!, where: ItemWhereInput): BatchPayload!
+  updateManyTrips(data: TripUpdateInput!, where: TripWhereInput): BatchPayload!
+  updateManyTripTransactions(data: TripTransactionUpdateInput!, where: TripTransactionWhereInput): BatchPayload!
+  updateManyTransactions(data: TransactionUpdateInput!, where: TransactionWhereInput): BatchPayload!
+  updateManyLocations(data: LocationUpdateInput!, where: LocationWhereInput): BatchPayload!
+  updateManyPaymentMetas(data: PaymentMetaUpdateInput!, where: PaymentMetaWhereInput): BatchPayload!
+  deleteManyVotes(where: VoteWhereInput): BatchPayload!
+  deleteManyLinks(where: LinkWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyItems(where: ItemWhereInput): BatchPayload!
+  deleteManyTrips(where: TripWhereInput): BatchPayload!
+  deleteManyTripTransactions(where: TripTransactionWhereInput): BatchPayload!
+  deleteManyTransactions(where: TransactionWhereInput): BatchPayload!
+  deleteManyLocations(where: LocationWhereInput): BatchPayload!
+  deleteManyPaymentMetas(where: PaymentMetaWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1704,10 +1708,6 @@ input TransactionCreateInput {
   payment_meta: PaymentMetaCreateOneInput
 }
 
-input TransactionCreateOneInput {
-  create: TransactionCreateInput
-}
-
 """
 An edge in a connection.
 """
@@ -1804,22 +1804,6 @@ input TransactionUpdatecategoryInput {
   set: [String!]
 }
 
-input TransactionUpdateDataInput {
-  transaction_id: ID
-  account_id: String
-  category_id: String
-  transaction_type: String
-  name: String
-  amount: Float
-  date: String
-  pending: Boolean
-  pending_transaction_id: String
-  accountOwner: String
-  category: TransactionUpdatecategoryInput
-  location: LocationUpdateOneInput
-  payment_meta: PaymentMetaUpdateOneInput
-}
-
 input TransactionUpdateInput {
   transaction_id: ID
   account_id: String
@@ -1834,18 +1818,6 @@ input TransactionUpdateInput {
   category: TransactionUpdatecategoryInput
   location: LocationUpdateOneInput
   payment_meta: PaymentMetaUpdateOneInput
-}
-
-input TransactionUpdateOneInput {
-  create: TransactionCreateInput
-  delete: Boolean
-  update: TransactionUpdateDataInput
-  upsert: TransactionUpsertNestedInput
-}
-
-input TransactionUpsertNestedInput {
-  update: TransactionUpdateDataInput!
-  create: TransactionCreateInput!
 }
 
 input TransactionWhereInput {
@@ -2435,9 +2407,17 @@ type TripTransactionConnection {
   aggregate: AggregateTripTransaction!
 }
 
+input TripTransactionCreatecategoryInput {
+  set: [String!]
+}
+
 input TripTransactionCreateInput {
+  plaidTransactionId: String!
+  name: String!
+  amount: Float!
+  date: String!
+  category: TripTransactionCreatecategoryInput
   user: UserCreateOneInput!
-  transaction: TransactionCreateOneInput!
   trip: TripCreateOneWithoutTransactionsInput!
 }
 
@@ -2447,8 +2427,12 @@ input TripTransactionCreateManyWithoutTripInput {
 }
 
 input TripTransactionCreateWithoutTripInput {
+  plaidTransactionId: String!
+  name: String!
+  amount: Float!
+  date: String!
+  category: TripTransactionCreatecategoryInput
   user: UserCreateOneInput!
-  transaction: TransactionCreateOneInput!
 }
 
 """
@@ -2468,6 +2452,14 @@ type TripTransactionEdge {
 enum TripTransactionOrderByInput {
   id_ASC
   id_DESC
+  plaidTransactionId_ASC
+  plaidTransactionId_DESC
+  name_ASC
+  name_DESC
+  amount_ASC
+  amount_DESC
+  date_ASC
+  date_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -2476,6 +2468,11 @@ enum TripTransactionOrderByInput {
 
 type TripTransactionPreviousValues {
   id: ID!
+  plaidTransactionId: String!
+  category: [String!]
+  name: String!
+  amount: Float!
+  date: String!
 }
 
 type TripTransactionSubscriptionPayload {
@@ -2513,9 +2510,17 @@ input TripTransactionSubscriptionWhereInput {
   node: TripTransactionWhereInput
 }
 
+input TripTransactionUpdatecategoryInput {
+  set: [String!]
+}
+
 input TripTransactionUpdateInput {
+  plaidTransactionId: String
+  name: String
+  amount: Float
+  date: String
+  category: TripTransactionUpdatecategoryInput
   user: UserUpdateOneInput
-  transaction: TransactionUpdateOneInput
   trip: TripUpdateOneWithoutTransactionsInput
 }
 
@@ -2529,8 +2534,12 @@ input TripTransactionUpdateManyWithoutTripInput {
 }
 
 input TripTransactionUpdateWithoutTripDataInput {
+  plaidTransactionId: String
+  name: String
+  amount: Float
+  date: String
+  category: TripTransactionUpdatecategoryInput
   user: UserUpdateOneInput
-  transaction: TransactionUpdateOneInput
 }
 
 input TripTransactionUpdateWithWhereUniqueWithoutTripInput {
@@ -2606,8 +2615,195 @@ input TripTransactionWhereInput {
   All values not ending with the given string.
   """
   id_not_ends_with: ID
+  plaidTransactionId: String
+  """
+  All values that are not equal to given value.
+  """
+  plaidTransactionId_not: String
+  """
+  All values that are contained in given list.
+  """
+  plaidTransactionId_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  plaidTransactionId_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  plaidTransactionId_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  plaidTransactionId_lte: String
+  """
+  All values greater than the given value.
+  """
+  plaidTransactionId_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  plaidTransactionId_gte: String
+  """
+  All values containing the given string.
+  """
+  plaidTransactionId_contains: String
+  """
+  All values not containing the given string.
+  """
+  plaidTransactionId_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  plaidTransactionId_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  plaidTransactionId_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  plaidTransactionId_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  plaidTransactionId_not_ends_with: String
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  amount: Float
+  """
+  All values that are not equal to given value.
+  """
+  amount_not: Float
+  """
+  All values that are contained in given list.
+  """
+  amount_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  amount_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  amount_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  amount_lte: Float
+  """
+  All values greater than the given value.
+  """
+  amount_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  amount_gte: Float
+  date: String
+  """
+  All values that are not equal to given value.
+  """
+  date_not: String
+  """
+  All values that are contained in given list.
+  """
+  date_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  date_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  date_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  date_lte: String
+  """
+  All values greater than the given value.
+  """
+  date_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  date_gte: String
+  """
+  All values containing the given string.
+  """
+  date_contains: String
+  """
+  All values not containing the given string.
+  """
+  date_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  date_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  date_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  date_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  date_not_ends_with: String
   user: UserWhereInput
-  transaction: TransactionWhereInput
   trip: TripWhereInput
 }
 

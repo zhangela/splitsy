@@ -76,7 +76,7 @@ class Trip extends Component {
   }
 }
 
-const CURRENT_TRIP_QUERY = gql`
+export const CURRENT_TRIP_QUERY = gql`
   query CurrentTripQuery($userId: String!) {
     currentTrip(userId: $userId) {
       id
@@ -88,6 +88,7 @@ const CURRENT_TRIP_QUERY = gql`
       }
       transactions {
         id
+        plaidTransactionId
       }
     }
   }

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 
+import { USER_ID } from '../constants';
+import { CURRENT_TRIP_QUERY } from './Trip';
 
 class Transaction extends Component {
 
@@ -12,13 +16,16 @@ class Transaction extends Component {
   }
 
   render() {
+
+    const currentUserId = localStorage.getItem(USER_ID);
+    const t = this.props.transaction;
     return (
       <article className="dt w-100 bb b--black-05 pb2 mt2">
         <div className="dtc w2 w3-ns v-mid">
           <img
             src={this.state.imageUrl}
             className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"
-            alt={this.props.transaction.category}
+            alt={t.category}
           />
         </div>
 
@@ -27,35 +34,91 @@ class Transaction extends Component {
 
           <div className="pa3 fl w-25 pv3">
             <h1 className="f6 f5-ns fw6 black mv0">
-              {this.props.transaction.name}
+              {t.name}
             </h1>
             <h2 className="f6 fw4 mt0 mb0 black-60">
-              {this.props.transaction.date}
+              {t.date}
             </h2>
           </div>
 
           <div className="pa3 fl w-25 pv3">
             <h2 className="f6 fw4 mt0 mb0 black-60">
-              ${this.props.transaction.amount}
+              ${t.amount}
             </h2>
           </div>
 
           <div className="pa3 fl w-25 pv3">
             <h2 className="f6 fw4 mt0 mb0 black-60">
-              {this.props.transaction.category && this.props.transaction.category[0]}
+              {t.category && t.category[0]}
             </h2>
           </div>
 
-          <div className="fl w-25 tc pv3">
-            <form className="w-100 tr">
-              <button
-                className="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60"
-                type="submit"
-              >
-              + Add to trip
-              </button>
-            </form>
-          </div>
+          <Query query={CURRENT_TRIP_QUERY} variables={{ userId: currentUserId }}>
+            {({ loading, error, data }) => {
+              const currentTrip = data.currentTrip;
+
+              if (currentTrip) {
+                const plaidTransactionIds = currentTrip.transactions.map(
+                  (tt) => {
+                    return tt.plaidTransactionId;
+                  });
+
+                  if (plaidTransactionIds.includes(t.transaction_id)) {
+
+                  // Transaction already in current trip
+                  return (
+                    <div className="fl w-25 tc pv3">
+                      <form className="w-100 tr">
+                        <button
+                          className="f6 button-reset bg-light-gray ba b--black-10 dim pointer pv1 black-60"
+                          type="submit"
+                        >
+                        - Remove
+                        </button>
+                      </form>
+                    </div>
+                  );
+
+                } else {
+
+                  // Transaction not in current trip
+                  return (
+                    <Mutation mutation={ADD_TRANSACTION_TO_TRIP_MUTATION}>
+                      {(addTransactionToTrip, { data }) => (
+                        <div className="fl w-25 tc pv3">
+                          <form className="w-100 tr">
+                            <button
+                              className="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60"
+                              type="submit"
+                              onClick={e => {
+                                e.preventDefault();
+                                addTransactionToTrip({
+                                  variables: {
+                                    tripId: currentTrip.id,
+                                    plaidTransactionId: t.transaction_id,
+                                    category: t.category,
+                                    name: t.name,
+                                    amount: t.amount,
+                                    date: t.date
+                                  }
+                                });
+                              }}
+                            >
+                            + Add to trip
+                            </button>
+                          </form>
+                        </div>
+                      )}
+                    </Mutation>
+                  );
+                }
+              } else {
+
+                // There's no current trip.
+                return <div></div>
+              }
+            }}
+          </Query>
         </div>
 
       </article>
@@ -85,5 +148,36 @@ class Transaction extends Component {
     }
   }
 }
+
+const ADD_TRANSACTION_TO_TRIP_MUTATION = gql`
+  mutation AddTransactionToTripMutation(
+    $tripId: String!
+    $plaidTransactionId: String!
+    $category: [String!]
+    $name: String!
+    $amount: Float!
+    $date: String!
+  ){
+    addTransactionToTrip(
+      tripId: $tripId,
+      plaidTransactionId: $plaidTransactionId,
+      category: $category,
+      name: $name,
+      amount: $amount,
+      date: $date
+    ) {
+      id
+    }
+  }
+`;
+
+const REMOVE_TRANSACTION_TO_TRIP_MUTATION = gql`
+  mutation RemoveTransactionToTripMutation(
+    $tripId: String!
+    $plaidTransactionId: String!
+  ){
+    removeTransactionFromTrip(tripId: $tripId, plaidTransactionId: $plaidTransactionId)
+  }
+`;
 
 export default Transaction;
