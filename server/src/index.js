@@ -7,12 +7,6 @@ const Query = require('./resolvers/Query');
 const Mutation = require('./resolvers/Mutation');
 const Subscription = require('./resolvers/Subscription');
 
-// We store the access_token in memory - in production, store it in a secure
-// persistent data store
-const ACCESS_TOKEN = null;
-const PUBLIC_TOKEN = null;
-const ITEM_ID = null;
-
 const resolvers = {
   Query,
   Mutation,

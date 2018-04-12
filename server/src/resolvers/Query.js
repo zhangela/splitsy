@@ -1,5 +1,12 @@
 const moment = require('moment');
 
+async function trip(parent, { tripId }, ctx, info) {
+  const trip = await ctx.db.query.trip({
+    where: { id: tripId }
+  }, info);
+  return trip;
+}
+
 async function transactions(parent, { userId }, ctx, info) {
   // Pull transactions for the Item for the last 30 days
   const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
@@ -51,7 +58,7 @@ async function currentTrip(parent, { userId }, ctx, info) {
       AND: {
         users_some: { id: userId },
         settled: false
-      } 
+      }
     }
   }, info); // the `info` param is very important, otherwise, nested fields would not show up :(
 
@@ -70,6 +77,7 @@ async function availableUsers(parent, { userId }, ctx, info) {
 }
 
 module.exports = {
+  trip,
   transactions,
   connectedItem,
   currentTrip,

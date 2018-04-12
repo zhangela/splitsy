@@ -84,7 +84,11 @@ class Transaction extends Component {
                                 });
                               }}
                             >
-                            - Remove
+                            <img
+                              src="https://cdn3.iconfinder.com/data/icons/line/36/no_entry-16.png"
+                              style={{paddingTop: "4px", marginRight: "4px"}}
+                            />
+                            Remove
                             </button>
                           </form>
                         </div>
@@ -117,7 +121,10 @@ class Transaction extends Component {
                                 });
                               }}
                             >
-                            + Add to trip
+                            <img
+                              src="https://cdn3.iconfinder.com/data/icons/line/36/add-16.png"
+                              style={{paddingTop: "4px", marginRight: "4px"}}/>
+                            <span>Add to trip</span>
                             </button>
                           </form>
                         </div>
@@ -184,7 +191,7 @@ const ADD_TRANSACTION_TO_TRIP_MUTATION = gql`
   }
 `;
 
-const REMOVE_TRANSACTION_FROM_TRIP_MUTATION = gql`
+export const REMOVE_TRANSACTION_FROM_TRIP_MUTATION = gql`
   mutation RemoveTransactionFromTripMutation(
     $tripId: String!
     $plaidTransactionId: String!

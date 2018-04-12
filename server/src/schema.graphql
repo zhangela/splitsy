@@ -2,9 +2,11 @@
 
 type Query {
   transactions(userId: String!): [Transaction!]
+  trip(tripId: String!): Trip
   connectedItem(userId: String!): PlaidItem
   currentTrip(userId: String!): Trip
   availableUsers(userId: String!): [User!]!
+  tripTransactions(tripId: String!): [TripTransaction!]!
 }
 
 type Mutation {
