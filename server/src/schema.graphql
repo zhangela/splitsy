@@ -1,12 +1,14 @@
-# import Link, Vote, Item, Trip, LinkSubscriptionPayload, VoteSubscriptionPayload from "./generated/prisma.graphql"
+# import Link, Vote, Item, Trip, PlaidTransaction, LinkSubscriptionPayload, VoteSubscriptionPayload from "./generated/prisma.graphql"
 
 type Query {
-  transactions(userId: String!): [Transaction!]
+  transactions(userId: String!): [PlaidTransaction!]
   trip(tripId: String!): Trip
   connectedItem(userId: String!): PlaidItem
   currentTrip(userId: String!): Trip
   availableUsers(userId: String!): [User!]!
-  tripTransactions(tripId: String!): [TripTransaction!]!
+  tripTransactions(tripId: String!): [TripTransaction!]
+
+  # plaidItem(clientId: String!, secret: String!, accessToken: String!): PlaidItem
 }
 
 type Mutation {
@@ -44,4 +46,16 @@ type PlaidItem {
   billed_products: [String!]
   institution_id: String!
   item_id: String!
+
+  userId: String!
+
+  plaidTransactions(
+    startDate: String!,
+    endDate: String!,
+    account_ids: [String!]
+    count: Int
+    offset: Int
+  ): [PlaidTransaction!]!
+
 }
+

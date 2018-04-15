@@ -76,7 +76,7 @@ type AggregatePaymentMeta {
   count: Int!
 }
 
-type AggregateTransaction {
+type AggregatePlaidTransaction {
   count: Int!
 }
 
@@ -1236,7 +1236,7 @@ type Mutation {
   createItem(data: ItemCreateInput!): Item!
   createTrip(data: TripCreateInput!): Trip!
   createTripTransaction(data: TripTransactionCreateInput!): TripTransaction!
-  createTransaction(data: TransactionCreateInput!): Transaction!
+  createPlaidTransaction(data: PlaidTransactionCreateInput!): PlaidTransaction!
   createLocation(data: LocationCreateInput!): Location!
   createPaymentMeta(data: PaymentMetaCreateInput!): PaymentMeta!
   updateVote(data: VoteUpdateInput!, where: VoteWhereUniqueInput!): Vote
@@ -1263,7 +1263,7 @@ type Mutation {
   updateManyItems(data: ItemUpdateInput!, where: ItemWhereInput): BatchPayload!
   updateManyTrips(data: TripUpdateInput!, where: TripWhereInput): BatchPayload!
   updateManyTripTransactions(data: TripTransactionUpdateInput!, where: TripTransactionWhereInput): BatchPayload!
-  updateManyTransactions(data: TransactionUpdateInput!, where: TransactionWhereInput): BatchPayload!
+  updateManyPlaidTransactions(data: PlaidTransactionUpdateInput!, where: PlaidTransactionWhereInput): BatchPayload!
   updateManyLocations(data: LocationUpdateInput!, where: LocationWhereInput): BatchPayload!
   updateManyPaymentMetas(data: PaymentMetaUpdateInput!, where: PaymentMetaWhereInput): BatchPayload!
   deleteManyVotes(where: VoteWhereInput): BatchPayload!
@@ -1272,7 +1272,7 @@ type Mutation {
   deleteManyItems(where: ItemWhereInput): BatchPayload!
   deleteManyTrips(where: TripWhereInput): BatchPayload!
   deleteManyTripTransactions(where: TripTransactionWhereInput): BatchPayload!
-  deleteManyTransactions(where: TransactionWhereInput): BatchPayload!
+  deleteManyPlaidTransactions(where: PlaidTransactionWhereInput): BatchPayload!
   deleteManyLocations(where: LocationWhereInput): BatchPayload!
   deleteManyPaymentMetas(where: PaymentMetaWhereInput): BatchPayload!
 }
@@ -1611,53 +1611,7 @@ input PaymentMetaWhereInput {
   payee_name_not_ends_with: String
 }
 
-type Query {
-  votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote]!
-  links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item]!
-  trips(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trip]!
-  tripTransactions(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TripTransaction]!
-  transactions(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Transaction]!
-  locations(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Location]!
-  paymentMetas(where: PaymentMetaWhereInput, orderBy: PaymentMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMeta]!
-  vote(where: VoteWhereUniqueInput!): Vote
-  link(where: LinkWhereUniqueInput!): Link
-  user(where: UserWhereUniqueInput!): User
-  item(where: ItemWhereUniqueInput!): Item
-  trip(where: TripWhereUniqueInput!): Trip
-  tripTransaction(where: TripTransactionWhereUniqueInput!): TripTransaction
-  votesConnection(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
-  linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  itemsConnection(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemConnection!
-  tripsConnection(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TripConnection!
-  tripTransactionsConnection(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TripTransactionConnection!
-  transactionsConnection(where: TransactionWhereInput, orderBy: TransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TransactionConnection!
-  locationsConnection(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LocationConnection!
-  paymentMetasConnection(where: PaymentMetaWhereInput, orderBy: PaymentMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentMetaConnection!
-  """
-  Fetches an object given its ID
-  """
-  node("""
-  The ID of an object
-  """
-  id: ID!): Node
-}
-
-type Subscription {
-  vote(where: VoteSubscriptionWhereInput): VoteSubscriptionPayload
-  link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  item(where: ItemSubscriptionWhereInput): ItemSubscriptionPayload
-  trip(where: TripSubscriptionWhereInput): TripSubscriptionPayload
-  tripTransaction(where: TripTransactionSubscriptionWhereInput): TripTransactionSubscriptionPayload
-  transaction(where: TransactionSubscriptionWhereInput): TransactionSubscriptionPayload
-  location(where: LocationSubscriptionWhereInput): LocationSubscriptionPayload
-  paymentMeta(where: PaymentMetaSubscriptionWhereInput): PaymentMetaSubscriptionPayload
-}
-
-type Transaction {
+type PlaidTransaction {
   transaction_id: ID!
   account_id: String!
   category: [String!]
@@ -1676,7 +1630,7 @@ type Transaction {
 """
 A connection to a list of items.
 """
-type TransactionConnection {
+type PlaidTransactionConnection {
   """
   Information to aid in pagination.
   """
@@ -1684,15 +1638,15 @@ type TransactionConnection {
   """
   A list of edges.
   """
-  edges: [TransactionEdge]!
-  aggregate: AggregateTransaction!
+  edges: [PlaidTransactionEdge]!
+  aggregate: AggregatePlaidTransaction!
 }
 
-input TransactionCreatecategoryInput {
+input PlaidTransactionCreatecategoryInput {
   set: [String!]
 }
 
-input TransactionCreateInput {
+input PlaidTransactionCreateInput {
   transaction_id: ID!
   account_id: String!
   category_id: String!
@@ -1703,7 +1657,7 @@ input TransactionCreateInput {
   pending: Boolean!
   pending_transaction_id: String
   accountOwner: String
-  category: TransactionCreatecategoryInput
+  category: PlaidTransactionCreatecategoryInput
   location: LocationCreateOneInput
   payment_meta: PaymentMetaCreateOneInput
 }
@@ -1711,18 +1665,18 @@ input TransactionCreateInput {
 """
 An edge in a connection.
 """
-type TransactionEdge {
+type PlaidTransactionEdge {
   """
   The item at the end of the edge.
   """
-  node: Transaction!
+  node: PlaidTransaction!
   """
   A cursor for use in pagination.
   """
   cursor: String!
 }
 
-enum TransactionOrderByInput {
+enum PlaidTransactionOrderByInput {
   transaction_id_ASC
   transaction_id_DESC
   account_id_ASC
@@ -1751,7 +1705,7 @@ enum TransactionOrderByInput {
   createdAt_DESC
 }
 
-type TransactionPreviousValues {
+type PlaidTransactionPreviousValues {
   transaction_id: ID!
   account_id: String!
   category: [String!]
@@ -1765,22 +1719,22 @@ type TransactionPreviousValues {
   accountOwner: String
 }
 
-type TransactionSubscriptionPayload {
+type PlaidTransactionSubscriptionPayload {
   mutation: MutationType!
-  node: Transaction
+  node: PlaidTransaction
   updatedFields: [String!]
-  previousValues: TransactionPreviousValues
+  previousValues: PlaidTransactionPreviousValues
 }
 
-input TransactionSubscriptionWhereInput {
+input PlaidTransactionSubscriptionWhereInput {
   """
   Logical AND on all given filters.
   """
-  AND: [TransactionSubscriptionWhereInput!]
+  AND: [PlaidTransactionSubscriptionWhereInput!]
   """
   Logical OR on all given filters.
   """
-  OR: [TransactionSubscriptionWhereInput!]
+  OR: [PlaidTransactionSubscriptionWhereInput!]
   """
   The subscription event gets dispatched when it's listed in mutation_in
   """
@@ -1797,14 +1751,14 @@ input TransactionSubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: TransactionWhereInput
+  node: PlaidTransactionWhereInput
 }
 
-input TransactionUpdatecategoryInput {
+input PlaidTransactionUpdatecategoryInput {
   set: [String!]
 }
 
-input TransactionUpdateInput {
+input PlaidTransactionUpdateInput {
   transaction_id: ID
   account_id: String
   category_id: String
@@ -1815,20 +1769,20 @@ input TransactionUpdateInput {
   pending: Boolean
   pending_transaction_id: String
   accountOwner: String
-  category: TransactionUpdatecategoryInput
+  category: PlaidTransactionUpdatecategoryInput
   location: LocationUpdateOneInput
   payment_meta: PaymentMetaUpdateOneInput
 }
 
-input TransactionWhereInput {
+input PlaidTransactionWhereInput {
   """
   Logical AND on all given filters.
   """
-  AND: [TransactionWhereInput!]
+  AND: [PlaidTransactionWhereInput!]
   """
   Logical OR on all given filters.
   """
-  OR: [TransactionWhereInput!]
+  OR: [PlaidTransactionWhereInput!]
   transaction_id: ID
   """
   All values that are not equal to given value.
@@ -2289,6 +2243,52 @@ input TransactionWhereInput {
   accountOwner_not_ends_with: String
   location: LocationWhereInput
   payment_meta: PaymentMetaWhereInput
+}
+
+type Query {
+  votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote]!
+  links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Item]!
+  trips(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trip]!
+  tripTransactions(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TripTransaction]!
+  plaidTransactions(where: PlaidTransactionWhereInput, orderBy: PlaidTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PlaidTransaction]!
+  locations(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Location]!
+  paymentMetas(where: PaymentMetaWhereInput, orderBy: PaymentMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PaymentMeta]!
+  vote(where: VoteWhereUniqueInput!): Vote
+  link(where: LinkWhereUniqueInput!): Link
+  user(where: UserWhereUniqueInput!): User
+  item(where: ItemWhereUniqueInput!): Item
+  trip(where: TripWhereUniqueInput!): Trip
+  tripTransaction(where: TripTransactionWhereUniqueInput!): TripTransaction
+  votesConnection(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
+  linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  itemsConnection(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ItemConnection!
+  tripsConnection(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TripConnection!
+  tripTransactionsConnection(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TripTransactionConnection!
+  plaidTransactionsConnection(where: PlaidTransactionWhereInput, orderBy: PlaidTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PlaidTransactionConnection!
+  locationsConnection(where: LocationWhereInput, orderBy: LocationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LocationConnection!
+  paymentMetasConnection(where: PaymentMetaWhereInput, orderBy: PaymentMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentMetaConnection!
+  """
+  Fetches an object given its ID
+  """
+  node("""
+  The ID of an object
+  """
+  id: ID!): Node
+}
+
+type Subscription {
+  vote(where: VoteSubscriptionWhereInput): VoteSubscriptionPayload
+  link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  item(where: ItemSubscriptionWhereInput): ItemSubscriptionPayload
+  trip(where: TripSubscriptionWhereInput): TripSubscriptionPayload
+  tripTransaction(where: TripTransactionSubscriptionWhereInput): TripTransactionSubscriptionPayload
+  plaidTransaction(where: PlaidTransactionSubscriptionWhereInput): PlaidTransactionSubscriptionPayload
+  location(where: LocationSubscriptionWhereInput): LocationSubscriptionPayload
+  paymentMeta(where: PaymentMetaSubscriptionWhereInput): PaymentMetaSubscriptionPayload
 }
 
 """

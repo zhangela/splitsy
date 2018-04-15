@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { getTransactions } = require('../utils');
 
 async function trip(parent, { tripId }, ctx, info) {
   const trip = await ctx.db.query.trip({
@@ -8,37 +9,19 @@ async function trip(parent, { tripId }, ctx, info) {
 }
 
 async function transactions(parent, { userId }, ctx, info) {
-  // Pull transactions for the Item for the last 30 days
-  const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-  const endDate = moment().format('YYYY-MM-DD');
+  startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+  endDate = moment().format('YYYY-MM-DD');
 
-  const userItems = await ctx.db.query.items({
-    where: { user: { id: userId } }
-  });
-
-  if (!userItems || userItems.length === 0) {
-    return;
-  }
-
-  // TODO: for now, assume each user only has 1 item.
-  const accessToken = userItems[0].accessToken;
-
-  const transactionsData = await ctx.plaidClient.getTransactions(
-    accessToken,
+  return getTransactions(ctx, userId,
     startDate,
     endDate,
-    {
-      count: 250,
-      offset: 0,
-    }
-  );
-  return transactionsData.transactions;
+    { accountIds: null, count: 250, offset: 0 });
 }
 
 async function connectedItem(parent, { userId }, ctx, info) {
   const userItems = await ctx.db.query.items({
     where: { user: { id: userId } }
-  });
+  }); // TODO: why can't we pass in info here
 
   if (!userItems || userItems.length === 0) {
     return;
@@ -47,9 +30,15 @@ async function connectedItem(parent, { userId }, ctx, info) {
   // TODO: for now, assume each user only has 1 item.
   const accessToken = userItems[0].accessToken;
 
-
   const itemData = await ctx.plaidClient.getItem(accessToken);
-  return itemData.item;
+
+  // This is pretty hacky, but basically, PlaidItem.plaidTransactions
+  // needs the userId to get the accessToken, but accessToken isn't
+  // a field in PlaidItem, so we add the field userId to ret.
+  const ret = itemData.item;
+  ret.userId = userId;
+
+  return ret;
 }
 
 async function currentTrip(parent, { userId }, ctx, info) {
@@ -66,7 +55,7 @@ async function currentTrip(parent, { userId }, ctx, info) {
     return;
   }
 
-  // TODO: for now, assume each user is only in 1 active trip.
+  //  TODO: for now, assume each user is only in 1 active trip.
   const trip = trips[0];
   return trip;
 }

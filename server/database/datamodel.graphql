@@ -52,7 +52,7 @@ type TripTransaction {
   date: String!
 }
 
-type Transaction {
+type PlaidTransaction {
   transaction_id: ID!
   account_id: String!
   category: [String!]

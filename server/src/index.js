@@ -6,11 +6,13 @@ const envvar = require('envvar');
 const Query = require('./resolvers/Query');
 const Mutation = require('./resolvers/Mutation');
 const Subscription = require('./resolvers/Subscription');
+const PlaidItem = require('./resolvers/PlaidItem');
 
 const resolvers = {
   Query,
   Mutation,
   Subscription,
+  PlaidItem,
 };
 
 const plaidClient = initPlaidClient();
