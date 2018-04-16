@@ -39,9 +39,7 @@ class CreateTrip extends Component {
   }
 
   render() {
-
     const currentUserId = localStorage.getItem(USER_ID);
-
     return (
       <Mutation mutation={CREATE_TRIP_MUTATION}>
         {(createTrip, { data }) => (
@@ -92,7 +90,7 @@ class CreateTrip extends Component {
                         }
 
                         return (
-                          data.availableUsers.map(({ id: userId, name }) => {
+                          data.availableUsers.map(({ id: userId, name, email }) => {
                               return (
                                 <label className="checkbox" key={userId}>
                                   <div className="lh-copy pv3 ba bl-0 bt-0 br-0 b--dotted b--black-30">
@@ -105,7 +103,8 @@ class CreateTrip extends Component {
                                       defaultChecked={this.state.userIds.has(userId)}
                                     />
                                     <span>
-                                      {name} {userId === currentUserId && " (you)"}
+                                      {name}
+                                      {userId === currentUserId ? " (you)" : " (" + email + ")"}
                                     </span>
                                   </div>
                                 </label>
@@ -143,6 +142,7 @@ const AVAILABLE_USERS_QUERY = gql`
     availableUsers(userId: $userId) {
       id
       name
+      email
     }
   }
 `;

@@ -42,9 +42,14 @@ class Header extends Component {
               Log out
             </div>
           ) : (
-            <Link to="/login" className="ml1 no-underline black">
-              Log in
-            </Link>
+            <div
+              className="link dim dark-gray f6 f5-l dib"
+              style={{ cursor: 'pointer' }}
+            >
+              <Link to="/login" className="ml1 no-underline black">
+                Log in
+              </Link>
+            </div>
           )}
         </div>
       </nav>

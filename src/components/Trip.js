@@ -9,10 +9,13 @@ import TripTransactionList from './TripTransactionList';
 class Trip extends Component {
   render() {
 
-    const userId = localStorage.getItem(USER_ID);
+    const currentUserId = localStorage.getItem(USER_ID);
+    if (!currentUserId) {
+      return <div>Please sign in first :)</div>;
+    }
 
     return (
-      <Query query={CURRENT_TRIP_QUERY} variables={{ userId }}>
+      <Query query={CURRENT_TRIP_QUERY} variables={{ userId: currentUserId }}>
         {({ loading, error, data }) => {
           if (loading) {
             return <div>Loading...</div>
