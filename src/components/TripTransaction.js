@@ -31,7 +31,7 @@ class TripTransaction extends Component {
 
         <div className="cf">
 
-          <div className="pa3 fl w-25 pv3">
+          <div className="pa3 fl w-20 pv3">
             <h1 className="f6 f5-ns fw6 black mv0">
               {t.name}
             </h1>
@@ -40,22 +40,29 @@ class TripTransaction extends Component {
             </h2>
           </div>
 
-          <div className="pa3 fl w-25 pv3">
+          <div className="pa3 fl w-20 pv3">
             <h2 className="f6 fw4 mt0 mb0 black-60">
               ${t.amount}
             </h2>
           </div>
 
-          <div className="pa3 fl w-25 pv3">
+          <div className="pa3 fl w-20 pv3">
             <h2 className="f6 fw4 mt0 mb0 black-60">
               {t.category && t.category[0]}
+            </h2>
+          </div>
+
+
+          <div className="pa3 fl w-20 pv3">
+            <h2 className="f6 fw4 mt0 mb0 black-60">
+              {t.user.name} {t.user.id === currentUserId && " (you)"}
             </h2>
           </div>
 
           { t.user.id === currentUserId &&
             <Mutation mutation={REMOVE_TRANSACTION_FROM_TRIP_MUTATION}>
               {(removeTransactionFromTrip, { data }) => (
-                <div className="fl w-25 tc pv3">
+                <div className="fl w-20 tc pv3">
                   <form className="w-100 tr">
                     <button
                       className="f6 button-reset bg-light-gray ba b--black-10 dim pointer pv1 black-60"
