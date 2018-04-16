@@ -32,7 +32,7 @@ class Trip extends Component {
             <div>
               <h2 className="lh-solid">Current Trip</h2>
 
-              <div className="cf">
+              <div className="cf pa3">
                 <div className="fl w-50 bg-near-white">
 
                   <div className="mt1">
@@ -115,7 +115,7 @@ class Trip extends Component {
                               className="flex items-center lh-copy pa3 ph0-l bb b--black-10">
                                 <img
                                   className="w2 h2 w3-ns h3-ns br-100"
-                                  src="https://cdn0.iconfinder.com/data/icons/elasto-online-store/26/00-ELASTOFONT-STORE-READY_user-circle-48.png"
+                                  src="https://cdn0.iconfinder.com/data/icons/elasto-online-store/26/00-ELASTOFONT-STORE-READY_user-circle-128.png"
                                   alt="user profile"
                                 />
                                 <div className="pl3 flex-auto f6 db black-70">
