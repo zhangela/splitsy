@@ -1,4 +1,4 @@
-# import Link, Vote, Item, Trip, PlaidTransaction, LinkSubscriptionPayload, VoteSubscriptionPayload from "./generated/prisma.graphql"
+# import Link, Vote, Item, PlaidTransaction, LinkSubscriptionPayload, VoteSubscriptionPayload from "./generated/prisma.graphql"
 
 type Query {
   transactions(userId: String!): [PlaidTransaction!]
@@ -67,3 +67,26 @@ type PlaidItem {
 
 }
 
+
+# REMEMBER, whenever we change this type,
+# there's a good chance we need to change it in datamodel.schema too
+type Trip {
+  id: ID!
+  name: String!
+  users: [User!]!
+
+  # TODO: if there's >= 1 user who's ready to sttle, you can no longer add
+  # transactions to this trip.
+  # if all the users of this trip is ready to settle, we can transfer money
+  readyToSettleUsers: [User!]!
+  settled: Boolean!
+
+  transactions: [TripTransaction!]!
+  tripBalance: [TripBalanceItem!]!
+}
+
+
+type TripBalanceItem {
+  user: User!
+  balance: Float!
+}

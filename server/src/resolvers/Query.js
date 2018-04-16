@@ -57,6 +57,7 @@ async function currentTrip(parent, { userId }, ctx, info) {
 
   //  TODO: for now, assume each user is only in 1 active trip.
   const trip = trips[0];
+
   return trip;
 }
 

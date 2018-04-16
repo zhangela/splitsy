@@ -33,6 +33,9 @@ type Item {
   accessToken: String!
 }
 
+
+# REMEMBER, whenever we change this type,
+# there's a good chance we need to change it in schema.schema too
 type Trip {
   id: ID! @unique
   name: String!
@@ -40,7 +43,7 @@ type Trip {
 
   # TODO: if there's >= 1 user who's ready to sttle, you can no longer add
   # transactions to this trip.
-  # if all the users of this trip is ready to settle, we auto transfer money
+  # if all the users of this trip is ready to settle, we can transfer money
   readyToSettleUsers: [User!]! @relation(name: "TripUsersReadyToSettle")
   settled: Boolean!
   transactions: [TripTransaction!]!
