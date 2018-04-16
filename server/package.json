@@ -1,9 +1,9 @@
 {
-  "name": "hackernews-graphql-js",
+  "name": "splitsy-server",
   "scripts": {
     "start": "node src/index.js",
     "dev": "npm-run-all --parallel start playground",
-    "playground": "graphql playground",
+    "playground": "graphql playground --port 4001",
     "prisma": "prisma"
   },
   "dependencies": {
