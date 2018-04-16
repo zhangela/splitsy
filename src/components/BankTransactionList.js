@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import { PLAID_PUBLIC_KEY, USER_ID } from '../constants';
-import Transaction from './Transaction';
+import BankTransaction from './BankTransaction';
 import PlaidLink from './PlaidLink';
 
 
@@ -56,7 +56,7 @@ class BankTransactionList extends Component {
                 return (
                   <div className="mw7 center">
                     {transactions.map((t, index) => (
-                      <Transaction transaction={t} key={t.transaction_id}/>
+                      <BankTransaction transaction={t} key={t.transaction_id}/>
                     ))}
                   </div>
                 );

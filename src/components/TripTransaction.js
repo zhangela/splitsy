@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Query, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
+import { Mutation } from 'react-apollo';
 
 import { USER_ID } from '../constants';
-import { CURRENT_TRIP_QUERY } from './Trip';
-import { REMOVE_TRANSACTION_FROM_TRIP_MUTATION } from './Transaction';
+import { REMOVE_TRANSACTION_FROM_TRIP_MUTATION } from './BankTransaction';
 
 class TripTransaction extends Component {
 
@@ -54,33 +52,36 @@ class TripTransaction extends Component {
             </h2>
           </div>
 
-          <Mutation mutation={REMOVE_TRANSACTION_FROM_TRIP_MUTATION}>
-            {(removeTransactionFromTrip, { data }) => (
-              <div className="fl w-25 tc pv3">
-                <form className="w-100 tr">
-                  <button
-                    className="f6 button-reset bg-light-gray ba b--black-10 dim pointer pv1 black-60"
-                    type="submit"
-                    onClick={e => {
-                      e.preventDefault();
-                      removeTransactionFromTrip({
-                        variables: {
-                          tripId: t.trip.id,
-                          plaidTransactionId: t.plaidTransactionId,
-                        }
-                      });
-                    }}
-                  >
-                   <img
-                    src="https://cdn3.iconfinder.com/data/icons/line/36/no_entry-16.png"
-                    style={{paddingTop: "4px", marginRight: "4px"}}
-                  />
-                  Remove
-                  </button>
-                </form>
-              </div>
-            )}
-          </Mutation>
+          { t.user.id === currentUserId &&
+            <Mutation mutation={REMOVE_TRANSACTION_FROM_TRIP_MUTATION}>
+              {(removeTransactionFromTrip, { data }) => (
+                <div className="fl w-25 tc pv3">
+                  <form className="w-100 tr">
+                    <button
+                      className="f6 button-reset bg-light-gray ba b--black-10 dim pointer pv1 black-60"
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault();
+                        removeTransactionFromTrip({
+                          variables: {
+                            tripId: t.trip.id,
+                            plaidTransactionId: t.plaidTransactionId,
+                          }
+                        });
+                      }}
+                    >
+                    <img
+                      src="https://cdn3.iconfinder.com/data/icons/line/36/no_entry-16.png"
+                      style={{paddingTop: "4px", marginRight: "4px"}}
+                      alt="remove"
+                    />
+                    Remove
+                    </button>
+                  </form>
+                </div>
+              )}
+            </Mutation>
+          }
 
         </div>
 

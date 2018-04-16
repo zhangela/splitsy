@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import { USER_ID } from '../constants';
 import { CURRENT_TRIP_QUERY } from './Trip';
 
-class Transaction extends Component {
+class BankTransaction extends Component {
 
   state = {
     imageUrl: "https://cdn.pixabay.com/photo/2017/11/10/04/47/image-2935360_1280.png",
@@ -87,6 +87,7 @@ class Transaction extends Component {
                             <img
                               src="https://cdn3.iconfinder.com/data/icons/line/36/no_entry-16.png"
                               style={{paddingTop: "4px", marginRight: "4px"}}
+                              alt="remove"
                             />
                             Remove
                             </button>
@@ -123,7 +124,9 @@ class Transaction extends Component {
                             >
                             <img
                               src="https://cdn3.iconfinder.com/data/icons/line/36/add-16.png"
-                              style={{paddingTop: "4px", marginRight: "4px"}}/>
+                              style={{paddingTop: "4px", marginRight: "4px"}}
+                              alt="add"
+                            />
                             <span>Add to trip</span>
                             </button>
                           </form>
@@ -203,4 +206,4 @@ export const REMOVE_TRANSACTION_FROM_TRIP_MUTATION = gql`
   }
 `;
 
-export default Transaction;
+export default BankTransaction;
