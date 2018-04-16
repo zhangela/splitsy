@@ -76,6 +76,7 @@ async function createTrip(
       data: {
         name: name,
         settled: false,
+        usersReadyToSettle: [],
         transactions: [],
         users: {
           connect: userIds.map((userId) => {
@@ -170,6 +171,21 @@ async function removeTransactionFromTrip(
   return true;
 }
 
+async function addReadyToSettleUser(parent, { tripId, userId }, ctx, info) {
+  await ctx.db.mutation.updateTrip({
+    data: {
+      readyToSettleUsers: {
+        connect: { id: userId }
+      }
+    },
+    where: {
+      id: tripId
+    }
+  });
+
+  // TODO: return false if this add fails
+  return true;
+}
 
 module.exports = {
   signup,
@@ -178,4 +194,5 @@ module.exports = {
   createTrip,
   addTransactionToTrip,
   removeTransactionFromTrip,
+  addReadyToSettleUser,
 }

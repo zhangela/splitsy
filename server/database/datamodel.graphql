@@ -20,6 +20,10 @@ type User {
   password: String!
   links: [Link!]!
   votes: [Vote!]!
+
+  # these 2 are only here because prisma requires a 2 way @relation
+  trips: [Trip!]! @relation(name: "TripUsers")
+  readyToSettleTrips: [Trip!]!  @relation(name: "TripUsersReadyToSettle")
 }
 
 type Item {
@@ -32,7 +36,12 @@ type Item {
 type Trip {
   id: ID! @unique
   name: String!
-  users: [User!]!
+  users: [User!]! @relation(name: "TripUsers")
+
+  # TODO: if there's >= 1 user who's ready to sttle, you can no longer add
+  # transactions to this trip.
+  # if all the users of this trip is ready to settle, we auto transfer money
+  readyToSettleUsers: [User!]! @relation(name: "TripUsersReadyToSettle")
   settled: Boolean!
   transactions: [TripTransaction!]!
 }

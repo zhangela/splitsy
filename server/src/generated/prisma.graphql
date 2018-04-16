@@ -25,6 +25,7 @@ type Trip implements Node {
   id: ID!
   name: String!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  readyToSettleUsers(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   settled: Boolean!
   transactions(where: TripTransactionWhereInput, orderBy: TripTransactionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TripTransaction!]
 }
@@ -47,6 +48,8 @@ type User implements Node {
   password: String!
   links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
+  trips(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trip!]
+  readyToSettleTrips(where: TripWhereInput, orderBy: TripOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trip!]
 }
 
 type Vote implements Node {
@@ -2309,8 +2312,19 @@ type TripConnection {
 input TripCreateInput {
   name: String!
   settled: Boolean!
-  users: UserCreateManyInput
+  users: UserCreateManyWithoutTripsInput
+  readyToSettleUsers: UserCreateManyWithoutReadyToSettleTripsInput
   transactions: TripTransactionCreateManyWithoutTripInput
+}
+
+input TripCreateManyWithoutReadyToSettleUsersInput {
+  create: [TripCreateWithoutReadyToSettleUsersInput!]
+  connect: [TripWhereUniqueInput!]
+}
+
+input TripCreateManyWithoutUsersInput {
+  create: [TripCreateWithoutUsersInput!]
+  connect: [TripWhereUniqueInput!]
 }
 
 input TripCreateOneWithoutTransactionsInput {
@@ -2318,10 +2332,25 @@ input TripCreateOneWithoutTransactionsInput {
   connect: TripWhereUniqueInput
 }
 
+input TripCreateWithoutReadyToSettleUsersInput {
+  name: String!
+  settled: Boolean!
+  users: UserCreateManyWithoutTripsInput
+  transactions: TripTransactionCreateManyWithoutTripInput
+}
+
 input TripCreateWithoutTransactionsInput {
   name: String!
   settled: Boolean!
-  users: UserCreateManyInput
+  users: UserCreateManyWithoutTripsInput
+  readyToSettleUsers: UserCreateManyWithoutReadyToSettleTripsInput
+}
+
+input TripCreateWithoutUsersInput {
+  name: String!
+  settled: Boolean!
+  readyToSettleUsers: UserCreateManyWithoutReadyToSettleTripsInput
+  transactions: TripTransactionCreateManyWithoutTripInput
 }
 
 """
@@ -2814,8 +2843,27 @@ input TripTransactionWhereUniqueInput {
 input TripUpdateInput {
   name: String
   settled: Boolean
-  users: UserUpdateManyInput
+  users: UserUpdateManyWithoutTripsInput
+  readyToSettleUsers: UserUpdateManyWithoutReadyToSettleTripsInput
   transactions: TripTransactionUpdateManyWithoutTripInput
+}
+
+input TripUpdateManyWithoutReadyToSettleUsersInput {
+  create: [TripCreateWithoutReadyToSettleUsersInput!]
+  connect: [TripWhereUniqueInput!]
+  disconnect: [TripWhereUniqueInput!]
+  delete: [TripWhereUniqueInput!]
+  update: [TripUpdateWithWhereUniqueWithoutReadyToSettleUsersInput!]
+  upsert: [TripUpsertWithWhereUniqueWithoutReadyToSettleUsersInput!]
+}
+
+input TripUpdateManyWithoutUsersInput {
+  create: [TripCreateWithoutUsersInput!]
+  connect: [TripWhereUniqueInput!]
+  disconnect: [TripWhereUniqueInput!]
+  delete: [TripWhereUniqueInput!]
+  update: [TripUpdateWithWhereUniqueWithoutUsersInput!]
+  upsert: [TripUpsertWithWhereUniqueWithoutUsersInput!]
 }
 
 input TripUpdateOneWithoutTransactionsInput {
@@ -2826,15 +2874,52 @@ input TripUpdateOneWithoutTransactionsInput {
   upsert: TripUpsertWithoutTransactionsInput
 }
 
+input TripUpdateWithoutReadyToSettleUsersDataInput {
+  name: String
+  settled: Boolean
+  users: UserUpdateManyWithoutTripsInput
+  transactions: TripTransactionUpdateManyWithoutTripInput
+}
+
 input TripUpdateWithoutTransactionsDataInput {
   name: String
   settled: Boolean
-  users: UserUpdateManyInput
+  users: UserUpdateManyWithoutTripsInput
+  readyToSettleUsers: UserUpdateManyWithoutReadyToSettleTripsInput
+}
+
+input TripUpdateWithoutUsersDataInput {
+  name: String
+  settled: Boolean
+  readyToSettleUsers: UserUpdateManyWithoutReadyToSettleTripsInput
+  transactions: TripTransactionUpdateManyWithoutTripInput
+}
+
+input TripUpdateWithWhereUniqueWithoutReadyToSettleUsersInput {
+  where: TripWhereUniqueInput!
+  data: TripUpdateWithoutReadyToSettleUsersDataInput!
+}
+
+input TripUpdateWithWhereUniqueWithoutUsersInput {
+  where: TripWhereUniqueInput!
+  data: TripUpdateWithoutUsersDataInput!
 }
 
 input TripUpsertWithoutTransactionsInput {
   update: TripUpdateWithoutTransactionsDataInput!
   create: TripCreateWithoutTransactionsInput!
+}
+
+input TripUpsertWithWhereUniqueWithoutReadyToSettleUsersInput {
+  where: TripWhereUniqueInput!
+  update: TripUpdateWithoutReadyToSettleUsersDataInput!
+  create: TripCreateWithoutReadyToSettleUsersInput!
+}
+
+input TripUpsertWithWhereUniqueWithoutUsersInput {
+  where: TripWhereUniqueInput!
+  update: TripUpdateWithoutUsersDataInput!
+  create: TripCreateWithoutUsersInput!
 }
 
 input TripWhereInput {
@@ -2960,6 +3045,9 @@ input TripWhereInput {
   users_every: UserWhereInput
   users_some: UserWhereInput
   users_none: UserWhereInput
+  readyToSettleUsers_every: UserWhereInput
+  readyToSettleUsers_some: UserWhereInput
+  readyToSettleUsers_none: UserWhereInput
   transactions_every: TripTransactionWhereInput
   transactions_some: TripTransactionWhereInput
   transactions_none: TripTransactionWhereInput
@@ -2990,10 +3078,17 @@ input UserCreateInput {
   password: String!
   links: LinkCreateManyWithoutPostedByInput
   votes: VoteCreateManyWithoutUserInput
+  trips: TripCreateManyWithoutUsersInput
+  readyToSettleTrips: TripCreateManyWithoutReadyToSettleUsersInput
 }
 
-input UserCreateManyInput {
-  create: [UserCreateInput!]
+input UserCreateManyWithoutReadyToSettleTripsInput {
+  create: [UserCreateWithoutReadyToSettleTripsInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateManyWithoutTripsInput {
+  create: [UserCreateWithoutTripsInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -3017,6 +3112,26 @@ input UserCreateWithoutLinksInput {
   email: String!
   password: String!
   votes: VoteCreateManyWithoutUserInput
+  trips: TripCreateManyWithoutUsersInput
+  readyToSettleTrips: TripCreateManyWithoutReadyToSettleUsersInput
+}
+
+input UserCreateWithoutReadyToSettleTripsInput {
+  name: String!
+  email: String!
+  password: String!
+  links: LinkCreateManyWithoutPostedByInput
+  votes: VoteCreateManyWithoutUserInput
+  trips: TripCreateManyWithoutUsersInput
+}
+
+input UserCreateWithoutTripsInput {
+  name: String!
+  email: String!
+  password: String!
+  links: LinkCreateManyWithoutPostedByInput
+  votes: VoteCreateManyWithoutUserInput
+  readyToSettleTrips: TripCreateManyWithoutReadyToSettleUsersInput
 }
 
 input UserCreateWithoutVotesInput {
@@ -3024,6 +3139,8 @@ input UserCreateWithoutVotesInput {
   email: String!
   password: String!
   links: LinkCreateManyWithoutPostedByInput
+  trips: TripCreateManyWithoutUsersInput
+  readyToSettleTrips: TripCreateManyWithoutReadyToSettleUsersInput
 }
 
 """
@@ -3103,6 +3220,8 @@ input UserUpdateDataInput {
   password: String
   links: LinkUpdateManyWithoutPostedByInput
   votes: VoteUpdateManyWithoutUserInput
+  trips: TripUpdateManyWithoutUsersInput
+  readyToSettleTrips: TripUpdateManyWithoutReadyToSettleUsersInput
 }
 
 input UserUpdateInput {
@@ -3111,15 +3230,26 @@ input UserUpdateInput {
   password: String
   links: LinkUpdateManyWithoutPostedByInput
   votes: VoteUpdateManyWithoutUserInput
+  trips: TripUpdateManyWithoutUsersInput
+  readyToSettleTrips: TripUpdateManyWithoutReadyToSettleUsersInput
 }
 
-input UserUpdateManyInput {
-  create: [UserCreateInput!]
+input UserUpdateManyWithoutReadyToSettleTripsInput {
+  create: [UserCreateWithoutReadyToSettleTripsInput!]
   connect: [UserWhereUniqueInput!]
   disconnect: [UserWhereUniqueInput!]
   delete: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueNestedInput!]
-  upsert: [UserUpsertWithWhereUniqueNestedInput!]
+  update: [UserUpdateWithWhereUniqueWithoutReadyToSettleTripsInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutReadyToSettleTripsInput!]
+}
+
+input UserUpdateManyWithoutTripsInput {
+  create: [UserCreateWithoutTripsInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutTripsInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutTripsInput!]
 }
 
 input UserUpdateOneInput {
@@ -3152,6 +3282,26 @@ input UserUpdateWithoutLinksDataInput {
   email: String
   password: String
   votes: VoteUpdateManyWithoutUserInput
+  trips: TripUpdateManyWithoutUsersInput
+  readyToSettleTrips: TripUpdateManyWithoutReadyToSettleUsersInput
+}
+
+input UserUpdateWithoutReadyToSettleTripsDataInput {
+  name: String
+  email: String
+  password: String
+  links: LinkUpdateManyWithoutPostedByInput
+  votes: VoteUpdateManyWithoutUserInput
+  trips: TripUpdateManyWithoutUsersInput
+}
+
+input UserUpdateWithoutTripsDataInput {
+  name: String
+  email: String
+  password: String
+  links: LinkUpdateManyWithoutPostedByInput
+  votes: VoteUpdateManyWithoutUserInput
+  readyToSettleTrips: TripUpdateManyWithoutReadyToSettleUsersInput
 }
 
 input UserUpdateWithoutVotesDataInput {
@@ -3159,11 +3309,18 @@ input UserUpdateWithoutVotesDataInput {
   email: String
   password: String
   links: LinkUpdateManyWithoutPostedByInput
+  trips: TripUpdateManyWithoutUsersInput
+  readyToSettleTrips: TripUpdateManyWithoutReadyToSettleUsersInput
 }
 
-input UserUpdateWithWhereUniqueNestedInput {
+input UserUpdateWithWhereUniqueWithoutReadyToSettleTripsInput {
   where: UserWhereUniqueInput!
-  data: UserUpdateDataInput!
+  data: UserUpdateWithoutReadyToSettleTripsDataInput!
+}
+
+input UserUpdateWithWhereUniqueWithoutTripsInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutTripsDataInput!
 }
 
 input UserUpsertNestedInput {
@@ -3181,10 +3338,16 @@ input UserUpsertWithoutVotesInput {
   create: UserCreateWithoutVotesInput!
 }
 
-input UserUpsertWithWhereUniqueNestedInput {
+input UserUpsertWithWhereUniqueWithoutReadyToSettleTripsInput {
   where: UserWhereUniqueInput!
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
+  update: UserUpdateWithoutReadyToSettleTripsDataInput!
+  create: UserCreateWithoutReadyToSettleTripsInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutTripsInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutTripsDataInput!
+  create: UserCreateWithoutTripsInput!
 }
 
 input UserWhereInput {
@@ -3414,6 +3577,12 @@ input UserWhereInput {
   votes_every: VoteWhereInput
   votes_some: VoteWhereInput
   votes_none: VoteWhereInput
+  trips_every: TripWhereInput
+  trips_some: TripWhereInput
+  trips_none: TripWhereInput
+  readyToSettleTrips_every: TripWhereInput
+  readyToSettleTrips_some: TripWhereInput
+  readyToSettleTrips_none: TripWhereInput
 }
 
 input UserWhereUniqueInput {

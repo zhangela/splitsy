@@ -24,11 +24,19 @@ type Mutation {
     category: [String!],
     name: String!,
     amount: Float!,
-    date: String!): TripTransaction
+    date: String!
+  ): TripTransaction
 
   removeTransactionFromTrip(
     tripId: String!,
-    plaidTransactionId: String!): Boolean!
+    plaidTransactionId: String!
+  ): Boolean!
+
+  addReadyToSettleUser(
+    tripId: String!,
+    userId: String!
+  ): Boolean!
+
 }
 
 type Subscription {
