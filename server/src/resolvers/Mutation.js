@@ -187,6 +187,39 @@ async function addReadyToSettleUser(parent, { tripId, userId }, ctx, info) {
   return true;
 }
 
+async function settleTrip(parent, { tripId }, ctx, info) {
+
+  // since this is a mutation, not a query, we need to manually pass in the
+  // `info` field that we want.
+  const trip = await ctx.db.query.trip({
+      where: { id: tripId }
+    },`
+    {
+      users {
+        id
+      }
+      readyToSettleUsers {
+        id
+      }
+      transactions {
+        amount
+        user {
+          id
+        }
+      }
+    }`);
+
+  console.log("trip", trip);
+
+  // TODO: assert that everyone has clicked ready
+
+  // TODO: pay!!!
+
+  // TODO: return false if this add fails
+  return true;
+}
+
+
 module.exports = {
   signup,
   login,
@@ -195,4 +228,5 @@ module.exports = {
   addTransactionToTrip,
   removeTransactionFromTrip,
   addReadyToSettleUser,
+  settleTrip,
 }

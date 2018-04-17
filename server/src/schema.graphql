@@ -37,6 +37,8 @@ type Mutation {
     userId: String!
   ): Boolean!
 
+  settleTrip(tripId: String!): Boolean!
+
 }
 
 type Subscription {

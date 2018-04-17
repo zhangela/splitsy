@@ -8,6 +8,10 @@ import TripTransactionList from './TripTransactionList';
 
 class Trip extends Component {
 
+  _everyoneIsReadyToSettle(tripUsers, readyToSettleUsers) {
+    return tripUsers.length === readyToSettleUsers.length;
+  }
+
   render() {
     const currentUserId = localStorage.getItem(USER_ID);
     if (!currentUserId) {
@@ -68,34 +72,71 @@ class Trip extends Component {
                     </div>
                   </div>
 
-                  <Mutation mutation={ADD_READY_TO_SETTLE_MUTATION}>
-                    {(addReadyToSettle, { data }) => (
-                      <div className="mt1">
-                        <div className="db fw4 lh-copy f6 pa3 ">
-                          <button
-                            className="b bw2 b--gray bg-lightest-blue ba br3 black-70 no-underline grow inline-flex items-center mb3 pv2 ph3"
-                            onClick={e => {
-                              e.preventDefault();
-                              addReadyToSettle({
-                                variables: {
-                                  tripId: currentTrip.id,
-                                  userId: currentUserId,
-                                }
-                              });
-                            }}>
-                            <div className="w2 pv1 pr2">
-                              <img
-                                src="https://cdn1.iconfinder.com/data/icons/unigrid-finance-vol-3/57/014_money_cash_flow_cycle_consumption_transfer_finance_business-32.png"
-                                style={{paddingTop: "4px", marginRight: "4px"}}
-                                alt="transfer"
-                              />
+                  {
+                    this._everyoneIsReadyToSettle(
+                      currentTrip.users, currentTrip.readyToSettleUsers) ?
+
+                    // Everyone is ready to settle!
+                    <Mutation mutation={SETTLE_TRIP_MUTATION}>
+                      {(settleTrip, { data }) => (
+                        <div className="mt1">
+                          <div className="db fw4 lh-copy f6 pa3 ">
+                            <div
+                              className="b bw2 b--black-70 bg-light-blue ba br3 black-70 no-underline grow inline-flex items-center mb3 pv2 ph3 pointer"
+                              onClick={e => {
+                                e.preventDefault();
+                                settleTrip({
+                                  variables: {
+                                    tripId: currentTrip.id,
+                                  }
+                                });
+                              }}>
+                              <div className="w2 pv1 pr2">
+                                <img
+                                  src="https://cdn1.iconfinder.com/data/icons/unigrid-finance-vol-3/57/014_money_cash_flow_cycle_consumption_transfer_finance_business-32.png"
+                                  style={{paddingTop: "4px", marginRight: "4px"}}
+                                  alt="transfer"
+                                />
+                              </div>
+                              <span>Settle the whole trip for everyone!</span>
                             </div>
-                            <span>I'm ready to settle</span>
-                          </button>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </Mutation>
+                      )}
+                    </Mutation>
+
+                    :
+
+                    // Still waiting for people to be ready
+                    <Mutation mutation={ADD_READY_TO_SETTLE_MUTATION}>
+                      {(addReadyToSettle, { data }) => (
+                        <div className="mt1">
+                          <div className="db fw4 lh-copy f6 pa3 ">
+                            <div
+                              className="b bw2 b--gray bg-lightest-blue ba br3 black-70 no-underline grow inline-flex items-center mb3 pv2 ph3 pointer"
+                              onClick={e => {
+                                e.preventDefault();
+                                addReadyToSettle({
+                                  variables: {
+                                    tripId: currentTrip.id,
+                                    userId: currentUserId,
+                                  }
+                                });
+                              }}>
+                              <div className="w2 pv1 pr2">
+                                <img
+                                  src="https://cdn1.iconfinder.com/data/icons/unigrid-finance-vol-3/57/014_money_cash_flow_cycle_consumption_transfer_finance_business-32.png"
+                                  style={{paddingTop: "4px", marginRight: "4px"}}
+                                  alt="transfer"
+                                />
+                              </div>
+                              <span>I'm ready to settle</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </Mutation>
+                  }
                 </div>
 
 
@@ -202,5 +243,14 @@ const ADD_READY_TO_SETTLE_MUTATION = gql`
   }
 `;
 
+const SETTLE_TRIP_MUTATION = gql`
+mutation SettleTripMutation(
+  $tripId: String!
+){
+  settleTrip(
+    tripId: $tripId,
+  )
+}
+`;
 
 export default Trip;
