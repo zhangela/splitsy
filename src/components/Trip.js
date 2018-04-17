@@ -64,7 +64,7 @@ class Trip extends Component {
                       <span className="b">Participants ready to settle:</span>
                       <div className="mt1 pa2 input-reset ba bg-transparent w-100 measure">
                         {currentTrip.readyToSettleUsers.length === 0 ?
-                          "No one" : currentTrip.users.map((user) => {
+                          "No one" : currentTrip.readyToSettleUsers.map((user) => {
                             return <div key={user.id}>{user.name}</div>
                           })
                         }
