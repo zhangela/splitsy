@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Header from './Header';
-import CreateLink from './CreateLink';
 import Login from './Login';
 import Trip from './Trip';
 import BankTransactionList from './BankTransactionList';
@@ -18,7 +17,6 @@ class App extends Component {
         <div className="ph3 pv1">
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/create" component={CreateLink} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/trip" component={Trip} />
             <Route exact path="/bank_transactions" component={BankTransactionList} />
