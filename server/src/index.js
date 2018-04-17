@@ -5,14 +5,12 @@ const envvar = require('envvar');
 
 const Query = require('./resolvers/Query');
 const Mutation = require('./resolvers/Mutation');
-const Subscription = require('./resolvers/Subscription');
 const PlaidItem = require('./resolvers/PlaidItem');
 const Trip = require('./resolvers/Trip');
 
 const resolvers = {
   Query,
   Mutation,
-  Subscription,
   PlaidItem,
   Trip,
 };
