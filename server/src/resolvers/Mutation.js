@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { APP_SECRET, getUserId } = require('../utils');
+const { APP_SECRET, getUserId, getTripBalance } = require('../utils');
 
 async function signup(parent, args, ctx, info) {
   const password = await bcrypt.hash(args.password, 10)
@@ -189,33 +189,38 @@ async function addReadyToSettleUser(parent, { tripId, userId }, ctx, info) {
 
 async function settleTrip(parent, { tripId }, ctx, info) {
 
-  // // since this is a mutation, not a query, we need to manually pass in the
-  // // `info` field that we want.
-  // const trip = await ctx.db.query.trip({
-  //     where: { id: tripId }
-  //   },`
-  //   {
-  //     users {
-  //       id
-  //     }
-  //     readyToSettleUsers {
-  //       id
-  //     }
-  //     transactions {
-  //       amount
-  //       user {
-  //         id
-  //       }
-  //     }
-  //   }`);
+  // since this is a mutation, not a query, we need to manually pass in the
+  // `info` field that we want.
+  const trip = await ctx.db.query.trip({
+      where: { id: tripId }
+    },`
+    {
+      users {
+        id
+      }
+      readyToSettleUsers {
+        id
+      }
+      transactions {
+        amount
+        user {
+          id
+        }
+      }
+    }`);
 
-  // console.log("trip", trip);
-  // const { transactions, users } = trip;
-  // const leger = getTripBalance(transactions, users);
-  // console.log("ledger", ledger);
-  // TODO: assert that everyone has clicked ready
+  console.log("trip", trip);
+  const { transactions, users } = trip;
+  const ledger = getTripBalance(transactions, users);
+  console.log("ledger", ledger);
 
+  // TODO: assert that everyone has clicked "ready"
   // TODO: pay!!!
+
+  await ctx.db.mutation.updateTrip({
+    data: { settled: true },
+    where: { id: tripId }
+  });
 
   // TODO: return false if this add fails
   return true;

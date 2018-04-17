@@ -144,7 +144,6 @@ class Trip extends Component {
                 <div className="mt1">
                   <div className="db fw4 lh-copy f6 pa3">
                     <span className="b">Balance:</span>
-
                       <ul className="list pl0 mt0">
                         {currentTrip.tripBalance.map(balanceItem => {
                           const userName = balanceItem.user.name;
@@ -174,6 +173,35 @@ class Trip extends Component {
                       </ul>
                   </div>
                 </div>
+
+                { this._everyoneIsReadyToSettle(
+                  currentTrip.users, currentTrip.readyToSettleUsers) &&
+                  (
+                    <div className="mt1">
+                      <div className="db fw4 lh-copy f6 pa3">
+                        <span className="b">Proposed Payments:</span>
+                          <ul className="list pl0 mt0">
+                            {currentTrip.plannedPayments.map(payment => {
+                              const fromUserName = payment.from.name;
+                              const toUserName = payment.to.name;
+                              const amount = payment.amount;
+                              return (
+                                <li
+                                  key={payment.from.id + "-" + payment.to.id}
+                                  className="flex items-center lh-copy pa3 ph0-l bb b--black-10">
+                                    <div className="pl3 flex-auto f6 db black-70">
+                                      {fromUserName} -> {toUserName}
+                                    </div>
+                                    <span className="f6">${amount}</span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                      </div>
+                    </div>
+                  )
+                }
+
 
               </div>
             </div>
@@ -225,6 +253,17 @@ export const CURRENT_TRIP_QUERY = gql`
           name
         }
         balance
+      }
+      plannedPayments {
+        from {
+          id
+          name
+        }
+        to {
+          id
+          name
+        }
+        amount
       }
     }
   }

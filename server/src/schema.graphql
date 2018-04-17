@@ -80,10 +80,19 @@ type Trip {
 
   transactions: [TripTransaction!]!
   tripBalance: [TripBalanceItem!]!
+
+  plannedPayments: [Payment!]!
 }
 
 
 type TripBalanceItem {
   user: User!
   balance: Float!
+}
+
+
+type Payment {
+  from: User!
+  to: User!
+  amount: Float!
 }
