@@ -76,7 +76,7 @@ async function createTrip(
       data: {
         name: name,
         settled: false,
-        usersReadyToSettle: [],
+        readyToSettleUsers: [],
         transactions: [],
         users: {
           connect: userIds.map((userId) => {
