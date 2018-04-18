@@ -97,7 +97,9 @@ function getPaymentDetails(ledger) {
   const payments = {};  // {fromUser: {toUser: amount}}
 
   const sumReducer = (sumSoFar, nextElement) => sumSoFar + nextElement;
-  if (Object.values(simpleLedger).reduce(sumReducer) !== 0) {
+  if (
+    (Object.values(simpleLedger).reduce(sumReducer) > 0.01) ||
+    (Object.values(simpleLedger).reduce(sumReducer) < -0.01)) {
     throw new Error("The current balance does not sum to 0");
   }
 

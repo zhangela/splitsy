@@ -11,4 +11,4 @@ secret: ILoveSplitsy
 # the file path pointing to your data model
 datamodel: datamodel.graphql
 
-cluster: public-foulsinger-716/prisma-eu1
+cluster: public-ribbongecko-112/prisma-us1
