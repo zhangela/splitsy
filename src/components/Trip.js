@@ -163,8 +163,8 @@ class Trip extends Component {
                                 </div>
                                 <div>
                                   { userBalance > 0 ?
-                                    <span className="f6 green">gets back ${userBalance}</span> :
-                                    <span className="f6 red">owes ${Math.abs(userBalance)}</span>
+                                    <span className="f6 green">gets back ${Math.round(userBalance * 100) / 100}</span> :
+                                    <span className="f6 red">owes ${Math.round(Math.abs(userBalance) * 100) / 100}</span>
                                   }
                                 </div>
                             </li>
@@ -192,7 +192,7 @@ class Trip extends Component {
                                     <div className="pl3 flex-auto f6 db black-70">
                                       {fromUserName} -> {toUserName}
                                     </div>
-                                    <span className="f6">${amount}</span>
+                                    <span className="f6">${Math.round(amount * 100) / 100}</span>
                                 </li>
                               );
                             })}

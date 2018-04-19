@@ -108,7 +108,7 @@ function getPaymentDetails(ledger) {
 
   let userIdWithLeastMoney;
   // loop until all values of simpleLedger are 0
-  while (Object.values(simpleLedger).filter((e) => e != 0).length > 0) {
+  while (Object.values(simpleLedger).filter((e) => e > 0.01 || e < -0.01).length > 0) {
 
     entryWithLeastMoney = Object.entries(simpleLedger).reduce(
       getItemwithMinValueReducer);
